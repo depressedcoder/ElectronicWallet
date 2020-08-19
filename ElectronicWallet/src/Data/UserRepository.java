@@ -156,5 +156,20 @@ public class UserRepository implements IUserRepository{
 		}
 		return null;
 	}
+	@Override
+	public Boolean UpdateUserBalancebyId(int Id,double Amount) {
+		try {
+			if(Id!=0 && Amount>0) {
+				Statement smt =  con.createStatement();
+				String query = "update User set Balance= "+Amount+" where Id = "+Id;
+				smt.execute(query);
+				return true;
+			}
+		}catch(Exception ex)
+		{
+			System.out.println("Couldn't Updated the User Balance for "+ex);
+		}
+		return false;
+	}
 
 }

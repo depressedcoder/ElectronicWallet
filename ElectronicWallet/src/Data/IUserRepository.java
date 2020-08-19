@@ -9,4 +9,5 @@ public interface IUserRepository {
 	User GetUserById(int id);
 	User GetUserByPhoneNumber(String phoneNumber);
 	User GetUserByUserNameandPassword(String userName,String password);
+	Boolean UpdateUserBalancebyId(int Id,double Amount);
 }
