@@ -128,6 +128,31 @@ public class EWalletMain {
 		revieverName.setText(null);
 		recieverPhoneNum.setText(null);
 	}
+	//methods
+	public static boolean isPhoneNumberValid(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        int d = Integer.parseInt(strNum); //you can't give float or .
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
+	public static boolean isAmountValid(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        double d = Double.parseDouble(strNum);
+	        if(d<=0)
+	        	return false;
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
 	private void SetUserTableData() {
 		try {
 			int rows = 0;
@@ -406,7 +431,7 @@ public class EWalletMain {
 					if(!txtPhoneNumber.getText().equals("") && txtPhoneNumber.getText().length() == 11 && 
 							!txtUserName.getText().equals("") && !txtName.getText().equals("") && 
 							!txtPassword.getText().equals("") && !txtConfirmPassword.getText().equals("") && 
-							(txtPassword.getText().equals(txtConfirmPassword.getText()))) 
+							(txtPassword.getText().equals(txtConfirmPassword.getText()))&& isPhoneNumberValid(txtPhoneNumber.getText())) 
 					{
 			            UserRepository userRepo = new UserRepository();
 						User userData = new User();
@@ -451,6 +476,8 @@ public class EWalletMain {
 							JOptionPane.showMessageDialog(null, "Please Enter Phone Number!!");
 						else if(txtPhoneNumber.getText().length() != 11)
 							JOptionPane.showMessageDialog(null, "Please Enter 11 digit Phone Number!!");
+						else if(!isPhoneNumberValid(txtPhoneNumber.getText()))
+							JOptionPane.showMessageDialog(null, "Please Enter numeric Phone Number with 11 digit!!");
 						
 					}
 		            
@@ -725,10 +752,6 @@ public class EWalletMain {
 		txtAmount.setBounds(269, 138, 206, 26);
 		pnlUserSendMoney.add(txtAmount);
 		
-		JButton btnSendMoney = new JButton("Send Money");
-		btnSendMoney.setBounds(336, 320, 117, 29);
-		pnlUserSendMoney.add(btnSendMoney);
-		
 		JLabel lblremarks = new JLabel("*Remarks:");
 		lblremarks.setForeground(Color.BLACK);
 		lblremarks.setBounds(193, 179, 64, 16);
@@ -825,7 +848,7 @@ public class EWalletMain {
 					if(!txtEPhone.getText().equals("") && txtEPhone.getText().length() ==11 &&
 							!txtEUserName.getText().equals("") && !txtEName.getText().equals("") 
 							&& !txtEPassword.getText().equals("") && !txtEConfirmPassword.getText().equals("") 
-							&& (txtEPassword.getText().equals(txtEConfirmPassword.getText()))) 
+							&& (txtEPassword.getText().equals(txtEConfirmPassword.getText())) && isPhoneNumberValid(txtEPhone.getText()))
 					{
 						userData.setName(txtEName.getText());
 						userData.setUserName(txtEUserName.getText());
@@ -859,9 +882,11 @@ public class EWalletMain {
 							JOptionPane.showMessageDialog(null, "Password Doesn't Match.");
 						else if(txtEPhone.getText().equals(""))
 							JOptionPane.showMessageDialog(null, "Please Enter Phone Number!!");
-						else if(txtEPhone.getText().length() !=11) {
+						else if(txtEPhone.getText().length() !=11) 
 							JOptionPane.showMessageDialog(null, "Please Enter 11 digit Phone Number!!");
-						}
+						else if(!isPhoneNumberValid(txtEPhone.getText()))
+							JOptionPane.showMessageDialog(null, "Please Enter numeric Phone Number with 11 digit!!");
+						
 						
 					}
 				}
@@ -894,10 +919,14 @@ public class EWalletMain {
 						lblReceiverPhoneNumber.setText(receiverUser.getPhoneNumber());
 					}
 					else {
+						ReceiverUserId=0;
 						JOptionPane.showMessageDialog(null, "No User found with this phone number!!");
+						ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
+						
 					}
 				}
 				else {
+					ReceiverUserId=0;
 					if(txtSearchReceiver.getText().equals(""))
 						JOptionPane.showMessageDialog(null, "Please Enter Phone number for Searching user!!");
 					else if(txtSearchReceiver.getText().length() != 11)
@@ -907,5 +936,36 @@ public class EWalletMain {
 		});
 		btnSearchRecieverUser.setBounds(534, 20, 117, 29);
 		pnlUserSendMoney.add(btnSearchRecieverUser);
+		
+		JButton btnSendMoney = new JButton("Send Money");
+		btnSendMoney.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(UserId!=0 && ReceiverUserId!=0 && !txtAmount.getText().equals("") 
+						&& isAmountValid(txtAmount.getText()) && !txtRemarks.getText().equals("")
+						&& UserId!=ReceiverUserId) 
+				{
+					
+				}
+				else {
+					if(txtAmount.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Please enter amount!!");
+					}
+					else if(!isAmountValid(txtAmount.getText())) {
+						JOptionPane.showMessageDialog(null, "Please enter VALID amount!!");
+					}
+					else if(txtRemarks.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Please enter remarks!!");
+					}
+					else if(UserId==ReceiverUserId) {
+						JOptionPane.showMessageDialog(null, "You can't send money to yourself! :(");
+					}
+					else if(ReceiverUserId==0) {
+						JOptionPane.showMessageDialog(null, "Couldn't find Receiver !!");
+					}
+				}
+			}
+		});
+		btnSendMoney.setBounds(336, 320, 117, 29);
+		pnlUserSendMoney.add(btnSendMoney);
 	}
 }

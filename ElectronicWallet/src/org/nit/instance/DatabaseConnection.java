@@ -3,6 +3,8 @@ package org.nit.instance;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import javax.swing.JOptionPane;
+
 public class DatabaseConnection {
 
 	private Connection con;
@@ -13,7 +15,7 @@ public class DatabaseConnection {
 			con = DriverManager.getConnection("jdbc:mysql://localhost/ElectronicWallet","root", "mobinur1996");
 		}
 		catch(Exception ex) {
-			System.out.println(ex);
+			System.out.println("Couldn't Connect the database for "+ex);
 		}
 	}
 	public static DatabaseConnection getDatabaseConnection() {
