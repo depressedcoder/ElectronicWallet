@@ -22,10 +22,9 @@ public class TransactionRepository implements ITransactionRepository {
 		try {
 			if(transaction!=null) {
 				Statement smt =  con.createStatement();
-				String query = "insert into Transaction " + " (SenderId, ReceiverId, Date, Remarks, Amount)"
+				String query = "insert into Transaction " + " (SenderId, ReceiverId, Remarks, Amount)"
 	                    + " values ('"+transaction.getSenderId()+"',"
 	                    		+ " '"+transaction.getReceiverId()+"',"
-	                    				+ " '"+transaction.getDate()+"',"
 	                    						+ "'"+transaction.getRemarks()+"',"
 	                    							+ " "+transaction.getAmount()+")";
 				

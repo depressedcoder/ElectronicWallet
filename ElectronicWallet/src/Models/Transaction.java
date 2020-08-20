@@ -4,16 +4,19 @@ public class Transaction {
 	private int Id;
 	private int SenderId;
 	private int ReceiverId;
-	private String Date;
+	private java.sql.Date Date;
 	private String Remarks;
 	private Double Amount;
 	
-	public Transaction(int Id,int SenderId,int ReceiverId,String Date,String Remarks,Double Amount)
+	public Transaction()
+	{
+		
+	}
+	public Transaction(int Id,int SenderId,int ReceiverId,String Remarks,Double Amount)
 	{
 		this.setId(Id);
 		this.setSenderId(SenderId);
 		this.setReceiverId(ReceiverId);
-		this.setDate(Date);
 		this.setRemarks(Remarks);
 		this.setAmount(Amount);
 	}
@@ -42,12 +45,8 @@ public class Transaction {
 		ReceiverId = receiverId;
 	}
 
-	public String getDate() {
+	public java.sql.Date getDate() {
 		return Date;
-	}
-
-	public void setDate(String date) {
-		Date = date;
 	}
 
 	public String getRemarks() {

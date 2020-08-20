@@ -30,7 +30,9 @@ import javax.swing.table.DefaultTableModel;
 
 import org.nit.instance.DatabaseConnection;
 
+import Data.TransactionRepository;
 import Data.UserRepository;
+import Models.Transaction;
 import Models.User;
 
 import java.awt.event.MouseAdapter;
@@ -922,7 +924,6 @@ public class EWalletMain {
 						ReceiverUserId=0;
 						JOptionPane.showMessageDialog(null, "No User found with this phone number!!");
 						ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
-						
 					}
 				}
 				else {
@@ -944,7 +945,56 @@ public class EWalletMain {
 						&& isAmountValid(txtAmount.getText()) && !txtRemarks.getText().equals("")
 						&& UserId!=ReceiverUserId) 
 				{
+					UserRepository userRepo = new UserRepository();
+					TransactionRepository transactionRepo = new TransactionRepository();
+					User senderUser = new User();
+					User receiverUser = new User();
 					
+					senderUser = userRepo.GetUserById(UserId);
+					receiverUser = userRepo.GetUserById(ReceiverUserId);
+					if(senderUser!=null && receiverUser!=null)
+					{
+						double senderCurrentBalance = senderUser.getBalance();
+						double amountTobeSend = Double.parseDouble(txtAmount.getText());
+						if(senderCurrentBalance>amountTobeSend) 
+						{
+							Transaction transaction = new Transaction();
+							transaction.setSenderId(senderUser.getId());
+							transaction.setReceiverId(ReceiverUserId);
+							transaction.setAmount(amountTobeSend);
+							transaction.setRemarks(txtRemarks.getText());
+							
+							Boolean isTransactioninserted = transactionRepo.InsertTransaction(transaction);
+							if(isTransactioninserted)
+							{
+								double senderBalanceAfterUpdate = senderCurrentBalance - amountTobeSend;
+								double recieverBalanceAfterUpdate = receiverUser.getBalance()+amountTobeSend;
+										
+								Boolean isSenderBalanceUpdate = userRepo.UpdateUserBalancebyId(senderUser.getId(), senderBalanceAfterUpdate);
+								Boolean isReceiverBalanceUpdated = userRepo.UpdateUserBalancebyId(receiverUser.getId(), recieverBalanceAfterUpdate);
+								if(isSenderBalanceUpdate && isReceiverBalanceUpdated) 
+								{
+									ReceiverUserId = 0;
+									JOptionPane.showMessageDialog(null, "Transfered Succeffully!!");
+									ClearSearchRecieverField(txtRemarks, lblReceiverName, lblReceiverPhoneNumber);
+									//updateSenderbalance meant lebel
+									lblBalance.setText(Double.toString(senderBalanceAfterUpdate));
+									//updateReceiverbalance meant lebel also need refresh button
+									//update transaction table
+								}
+							}
+							else 
+							{
+								JOptionPane.showMessageDialog(null, "OOPs! something went wrong!! Transaction Didn't succefull!!");
+							}
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Not Enough Money! Please Recharge!");
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Sender and Receiver not found!");
+					}
 				}
 				else {
 					if(txtAmount.getText().equals("")) {
@@ -967,5 +1017,25 @@ public class EWalletMain {
 		});
 		btnSendMoney.setBounds(336, 320, 117, 29);
 		pnlUserSendMoney.add(btnSendMoney);
+		
+		JButton btnUserRefresh = new JButton("R");
+		btnUserRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UserRepository userRepo = new UserRepository();
+				User user = new User();
+				user = userRepo.GetUserById(UserId);
+				if(user!=null)
+				{
+					lblUserName.setText(user.getName());
+					lblBalance.setText(user.getBalance().toString());
+					ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Couldn't Refresh properly!!");
+				}
+			}
+		});
+		btnUserRefresh.setBounds(32, 1, 40, 29);
+		pnlUserProfile.add(btnUserRefresh);
 	}
 }
