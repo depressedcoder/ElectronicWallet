@@ -3,6 +3,7 @@ package Data;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -109,18 +110,13 @@ public class UserRepository implements IUserRepository{
 				Statement stmt = con.createStatement();
 				 String sql = "Select * from User where UserName = '"+userName+"' and Password = '"+password+"'";
 				 ResultSet rs = stmt.executeQuery(sql);
-				 User userData = new User();
+				 User userData;
 				 
 				 if(rs.next()) {
-					 userData.setId(rs.getInt(1));
-					 userData.setName(rs.getString("Name"));
-					 userData.setPassword(rs.getString("Password"));
-					 userData.setUserName(rs.getString("UserName"));
-					 userData.setPhoneNumber(rs.getString("PhoneNumber"));
-					 userData.setAddress(rs.getString("Address"));
-					 userData.setGender(rs.getString("Gender"));
-					 userData.setBalance(rs.getDouble(7)); //in 7 number index the balance is located...
-					 userData.setStatus(rs.getString("Status"));
+					 userData = new User(rs.getInt(1),rs.getString("UserName"),
+								rs.getString("Password"), rs.getString("Name"),
+								rs.getString("Address"), rs.getString("PhoneNumber"),
+								rs.getString("Gender"), rs.getDouble(7), rs.getString("Status"));
 					 
 					 return userData;
 				 }
@@ -170,6 +166,26 @@ public class UserRepository implements IUserRepository{
 			System.out.println("Couldn't Updated the User Balance for "+ex);
 		}
 		return false;
+	}
+	@Override
+	public ArrayList<User> GetAllUser() {
+		ArrayList<User> listOfUser = new ArrayList<User>();
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "Select * from User";
+			ResultSet rs = stmt.executeQuery(sql);
+			User user;
+			while(rs.next()) {
+				user = new User(rs.getInt(1),rs.getString("UserName"),
+						rs.getString("Password"), rs.getString("Name"),
+						rs.getString("Address"), rs.getString("PhoneNumber"),
+						rs.getString("Gender"), rs.getDouble(7), rs.getString("Status"));
+				listOfUser.add(user);
+			}
+		}catch(Exception e) {
+			System.out.println("Couldn't get List of users for "+e);
+		}
+		return listOfUser;
 	}
 
 }

@@ -1,5 +1,7 @@
 package Data;
 
+import java.util.ArrayList;
+
 import Models.User;
 
 public interface IUserRepository {
@@ -10,4 +12,5 @@ public interface IUserRepository {
 	User GetUserByPhoneNumber(String phoneNumber);
 	User GetUserByUserNameandPassword(String userName,String password);
 	Boolean UpdateUserBalancebyId(int Id,double Amount);
+	ArrayList<User> GetAllUser();
 }

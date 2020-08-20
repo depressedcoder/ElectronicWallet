@@ -21,15 +21,18 @@ import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import org.nit.instance.DatabaseConnection;
 
+import Data.IUserRepository;
 import Data.TransactionRepository;
 import Data.UserRepository;
 import Models.Transaction;
@@ -57,7 +60,7 @@ public class EWalletMain {
 	private int UserId;
 	private int ReceiverUserId;
 	private JTable UserTable;
-	private JTable table_1;
+	private JTable AdminTransactionTable;
 	private int AdminViewUserId;
 	private JTextField txtEName;
 	private JTextField txtEUserName;
@@ -157,39 +160,31 @@ public class EWalletMain {
 	}
 	private void SetUserTableData() {
 		try {
-			int rows = 0;
-			int rowindex = 0;
-			
-			 Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			 ResultSet rs = stmt.executeQuery("select * from User");
-			 if(rs.next()) {
-				 //rs=stmt.executeQuery(); 
-				 rs.last();
-				 rows = rs.getRow();
-				 rs.beforeFirst();
-				 
+			UserRepository userRepo = new UserRepository();
+			ArrayList<User> listOfUser = userRepo.GetAllUser();
+
+			 if(listOfUser.size()>0) {
+				 String[][] data = new String[listOfUser.size()][9];//rows,column
+				 int rowindex = 0;
+				 for(int i=0;i<listOfUser.size();i++)
+				 {
+					 data[rowindex][0] = listOfUser.get(i).getId()+"";
+					 data[rowindex][1] = listOfUser.get(i).getUserName();
+			  		 data[rowindex][2] = listOfUser.get(i).getPassword();
+					 data[rowindex][3] = listOfUser.get(i).getName();
+					 data[rowindex][4] = listOfUser.get(i).getPhoneNumber();
+					 data[rowindex][5] = listOfUser.get(i).getAddress();
+					 data[rowindex][6] = listOfUser.get(i).getBalance()+"";
+					 data[rowindex][7] = listOfUser.get(i).getGender();
+					 data[rowindex][8] = listOfUser.get(i).getStatus();
+					 rowindex++;
+				 }
+				 String[] cols = {"Id" , "UserName" , "Password", "Name" , "PhoneNumber", "Address", "Balance","Gender","Status"};
+	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+	   			 UserTable.setModel(model);
 			 }
-			 String[][] data = new String[rows][9];
-			 while(rs.next())
-			 {
-				 data[rowindex][0] = rs.getInt(1)+"";
-				 data[rowindex][1] = rs.getString(2);
-		  		 data[rowindex][2] = rs.getString(3);
-				 data[rowindex][3] = rs.getString(4);
-				 data[rowindex][4] = rs.getString(5);
-				 data[rowindex][5] = rs.getString(6);
-				 data[rowindex][6] = rs.getDouble(7)+"";
-				 data[rowindex][7] = rs.getString(8);
-				 data[rowindex][8] = rs.getString(9);
-				 rowindex++;
-			 }
-			 String[] cols = {"Id" , "User Name" , "Password", "Name" , "Phone Number", "Address", "Balance","Gender","Status"};
-   			 DefaultTableModel model = new DefaultTableModel(data,cols);
-   			 UserTable.setModel(model);
-			 rs.close();
-			 stmt.close();
 		}
-		catch(Exception ex) {
+		catch(ArrayIndexOutOfBoundsException ex) {
 			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
 		}
 	}
@@ -367,13 +362,14 @@ public class EWalletMain {
 		pnlUserProfile.add(lblBalance);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		scrollPane.setForeground(Color.LIGHT_GRAY);
-		scrollPane.setBackground(Color.BLACK);
 		scrollPane.setBounds(29, 90, 737, 184);
 		pnlAdmin.add(scrollPane);
 		
 		UserTable = new JTable();
+		JTableHeader header = UserTable.getTableHeader();
+	      header.setBackground(Color.black);
+	      header.setForeground(Color.white);
+	      
 		UserTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -392,8 +388,8 @@ public class EWalletMain {
 		scrollPane_1.setBounds(29, 328, 737, 184);
 		pnlAdmin.add(scrollPane_1);
 		
-		table_1 = new JTable();
-		scrollPane_1.setViewportView(table_1);
+		AdminTransactionTable = new JTable();
+		scrollPane_1.setViewportView(AdminTransactionTable);
 		
 		JLabel lblNewLabel_7 = new JLabel("Transections");
 		lblNewLabel_7.setForeground(Color.GRAY);

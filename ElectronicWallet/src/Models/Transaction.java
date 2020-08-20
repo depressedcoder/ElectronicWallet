@@ -12,13 +12,14 @@ public class Transaction {
 	{
 		
 	}
-	public Transaction(int Id,int SenderId,int ReceiverId,String Remarks,Double Amount)
+	public Transaction(int Id,int SenderId,int ReceiverId,String Remarks,Double Amount,java.sql.Date Date)
 	{
 		this.setId(Id);
 		this.setSenderId(SenderId);
 		this.setReceiverId(ReceiverId);
 		this.setRemarks(Remarks);
 		this.setAmount(Amount);
+		this.setDate(Date);
 	}
 
 	public int getId() {
@@ -45,10 +46,6 @@ public class Transaction {
 		ReceiverId = receiverId;
 	}
 
-	public java.sql.Date getDate() {
-		return Date;
-	}
-
 	public String getRemarks() {
 		return Remarks;
 	}
@@ -63,5 +60,11 @@ public class Transaction {
 
 	public void setAmount(Double amount) {
 		Amount = amount;
+	}
+	public java.sql.Date getDate() {
+		return Date;
+	}
+	public void setDate(java.sql.Date date) {
+		Date = date;
 	}
 }
