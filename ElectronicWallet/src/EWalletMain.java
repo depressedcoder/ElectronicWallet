@@ -81,6 +81,7 @@ public class EWalletMain {
 			public void run() {
 				try {
 					EWalletMain window = new EWalletMain();
+					window.frame.setTitle("E-Wallet (v 1.0)");
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -164,7 +165,7 @@ public class EWalletMain {
 			ArrayList<User> listOfUser = userRepo.GetAllUser();
 
 			 if(listOfUser.size()>0) {
-				 String[][] data = new String[listOfUser.size()][9];//rows,column
+				 String[][] data = new String[listOfUser.size()][10];//rows,column
 				 int rowindex = 0;
 				 for(int i=0;i<listOfUser.size();i++)
 				 {
@@ -177,11 +178,53 @@ public class EWalletMain {
 					 data[rowindex][6] = listOfUser.get(i).getBalance()+"";
 					 data[rowindex][7] = listOfUser.get(i).getGender();
 					 data[rowindex][8] = listOfUser.get(i).getStatus();
+					 data[rowindex][9] = listOfUser.get(i).getUserType();
 					 rowindex++;
 				 }
-				 String[] cols = {"Id" , "UserName" , "Password", "Name" , "PhoneNumber", "Address", "Balance","Gender","Status"};
+				 String[] cols = {"Id" , "User Name" , "Password", "Name" , "Phone Number", "Address", "Balance","Gender","Status","User Type"};
 	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
 	   			 UserTable.setModel(model);
+			 }
+		}
+		catch(ArrayIndexOutOfBoundsException ex) {
+			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
+		}
+	}
+	private void SetAdminViewTransactionTableData() {
+		try {
+			TransactionRepository transactionRepo = new TransactionRepository();
+			ArrayList<Transaction> listOfTransactionDate = transactionRepo.GetAllTransactions();
+			
+			 if(listOfTransactionDate.size()>0) {
+				 String[][] data = new String[listOfTransactionDate.size()][11];//rows,column
+				 int rowindex = 0;
+				 for(int i=0;i<listOfTransactionDate.size();i++)
+				 {
+					 UserRepository userRepo = new UserRepository();
+					 User senderInfo = userRepo.GetUserById(listOfTransactionDate.get(i).getSenderId());
+					 User recieverInfo = userRepo.GetUserById(listOfTransactionDate.get(i).getReceiverId());
+					 
+					 data[rowindex][0] = listOfTransactionDate.get(i).getId()+"";
+					 data[rowindex][1] = listOfTransactionDate.get(i).getSenderId()+"";
+					 
+					 data[rowindex][2] = senderInfo.getName();
+					 data[rowindex][3] = senderInfo.getPhoneNumber();
+					 
+			  		 data[rowindex][4] = listOfTransactionDate.get(i).getReceiverId()+"";
+			  		 
+			  		 data[rowindex][5] = recieverInfo.getName();
+					 data[rowindex][6] = recieverInfo.getPhoneNumber();
+					 
+					 data[rowindex][7] = listOfTransactionDate.get(i).getDate()+"";
+					 data[rowindex][8] = listOfTransactionDate.get(i).getRemarks();
+					 data[rowindex][9] = listOfTransactionDate.get(i).getAmount()+"";
+					 data[rowindex][10] = listOfTransactionDate.get(i).getTransactionType();
+					
+					 rowindex++;
+				 }
+				 String[] cols = {"T Id" , "S Id" ,"Sender Name", "Sender Phonenumeber","R Id","Receiver Name","Receiver PhoneNumber",  "Date" , "Remarks", "Amount", "T Type"};
+	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+	   			 AdminTransactionTable.setModel(model);
 			 }
 		}
 		catch(ArrayIndexOutOfBoundsException ex) {
@@ -389,6 +432,9 @@ public class EWalletMain {
 		pnlAdmin.add(scrollPane_1);
 		
 		AdminTransactionTable = new JTable();
+		JTableHeader adminTransactionTableHeader = AdminTransactionTable.getTableHeader();
+		adminTransactionTableHeader.setBackground(Color.black);
+		adminTransactionTableHeader.setForeground(Color.white);
 		scrollPane_1.setViewportView(AdminTransactionTable);
 		
 		JLabel lblNewLabel_7 = new JLabel("Transections");
@@ -445,7 +491,7 @@ public class EWalletMain {
 							userData.setBalance((double) 100);
 							userData.setGender(Gender);
 							userData.setStatus("Block");
-							
+							userData.setUserType("User");
 							Boolean isUpdatedUser = userRepo.InsertUser(userData);
 							
 				            if(isUpdatedUser) {
@@ -784,49 +830,42 @@ public class EWalletMain {
 		btnlogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//admin login
-					if(txtLoginUserName.getText().equals("admin") && txtLoginPassword.getText().equals("admin")) {
-						try {
-							SetUserTableData();
-							switchPanel(pnlAdmin);
-						}
-						catch(Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-					else {
-						if(!txtLoginUserName.getText().equals("") && !txtLoginPassword.getText().equals("")) {
-							 UserRepository ur = new UserRepository();
-							 User userData = ur.GetUserByUserNameandPassword(txtLoginUserName.getText(),txtLoginPassword.getText().toString());
-							 if(userData!=null) {
-								 String UserStatus = userData.getStatus();
-								 if(UserStatus.equalsIgnoreCase("Active")) {
-									 UserId = userData.getId();
-									 lblUserName.setText(userData.getName());
-									 lblBalance.setText(userData.getBalance().toString());
-									 txtLoginUserName.setText(null);
-									 txtLoginPassword.setText(null);
-									 ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
-									 switchPanel(pnlUserProfile);
-								 }
-								 else {
-									 UserId = 0;
-									 JOptionPane.showMessageDialog(null, "This User is currently Blocked!!");
-								 }
+					if(!txtLoginUserName.getText().equals("") && !txtLoginPassword.getText().equals("")) {
+						 UserRepository ur = new UserRepository();
+						 User userData = ur.GetUserByUserNameandPassword(txtLoginUserName.getText(),txtLoginPassword.getText().toString());
+						 if(userData!=null && userData.getUserType().equalsIgnoreCase("User")) {
+							 String UserStatus = userData.getStatus();
+							 if(UserStatus.equalsIgnoreCase("Active")) {
+								 UserId = userData.getId();
+								 lblUserName.setText(userData.getName());
+								 lblBalance.setText(userData.getBalance().toString());
+								 txtLoginUserName.setText(null);
+								 txtLoginPassword.setText(null);
+								 ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
+								 switchPanel(pnlUserProfile);
 							 }
 							 else {
-								 JOptionPane.showMessageDialog(null, "User Name or Password Incorrect");
-								 //con.close();
+								 UserId = 0;
+								 JOptionPane.showMessageDialog(null, "This User is currently Blocked!!");
 							 }
-						}
-						else {
-							if(txtLoginUserName.getText().equals("") && txtLoginPassword.getText().equals(""))
-								JOptionPane.showMessageDialog(null, "Please Enter UserName & Password!!");
-							else if(txtLoginPassword.getText().equals(""))
-								JOptionPane.showMessageDialog(null, "Please Enter Password!");
-							else
-								JOptionPane.showMessageDialog(null, "Please Enter UserName!");
-						}
+						 }
+						 else if(userData!=null && userData.getUserType().equalsIgnoreCase("Admin")) {
+							 SetUserTableData();
+							 SetAdminViewTransactionTableData();
+							 switchPanel(pnlAdmin);
+						 }
+						 else {
+							 JOptionPane.showMessageDialog(null, "User Name or Password Incorrect");
+							 //con.close();
+						 }
+					}
+					else {
+						if(txtLoginUserName.getText().equals("") && txtLoginPassword.getText().equals(""))
+							JOptionPane.showMessageDialog(null, "Please Enter UserName & Password!!");
+						else if(txtLoginPassword.getText().equals(""))
+							JOptionPane.showMessageDialog(null, "Please Enter Password!");
+						else
+							JOptionPane.showMessageDialog(null, "Please Enter UserName!");
 					}
 				}catch(Exception f) {
 					System.out.println(f);
@@ -855,6 +894,7 @@ public class EWalletMain {
 						userData.setAddress(txtEAddress.getText());
 						userData.setId(UserId);
 						userData.setGender(eGender);
+						userData.setUserType("User");
 						
 						User updatedUser = userRepo.UpdateUser(userData);
 						
@@ -910,7 +950,7 @@ public class EWalletMain {
 					UserRepository userRepo = new UserRepository();
 					User receiverUser = new User();
 					receiverUser = userRepo.GetUserByPhoneNumber(txtSearchReceiver.getText());
-					if(receiverUser != null && receiverUser.getStatus().equals("Active"))
+					if(receiverUser != null && receiverUser.getStatus().equals("Active") && receiverUser.getUserType().equalsIgnoreCase("User"))
 					{
 						ReceiverUserId = receiverUser.getId();
 						lblReceiverName.setText(receiverUser.getName());
@@ -959,6 +999,7 @@ public class EWalletMain {
 							transaction.setReceiverId(ReceiverUserId);
 							transaction.setAmount(amountTobeSend);
 							transaction.setRemarks(txtRemarks.getText());
+							transaction.setTransactionType("Transfer");
 							
 							Boolean isTransactioninserted = transactionRepo.InsertTransaction(transaction);
 							if(isTransactioninserted)

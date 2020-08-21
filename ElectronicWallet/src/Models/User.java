@@ -10,12 +10,13 @@ public class User {
 	private String Gender;
 	private Double Balance;
 	private String Status;
+	private String UserType;
 	
 	public User() {
 		
 	}
 	public User(int Id,String UserName,String Password,String Name,String Address,
-			String PhoneNumber, String Gender, Double Balance, String Status)
+			String PhoneNumber, String Gender, Double Balance, String Status, String UserType)
 	{
 		this.setId(Id);
 		this.setUserName(UserName);
@@ -26,6 +27,7 @@ public class User {
 		this.setGender(Gender);
 		this.setBalance(Balance);
 		this.setStatus(Status);
+		this.setUserType(UserType);
 	}
 	
 	public String getUserName() {
@@ -81,5 +83,11 @@ public class User {
 	}
 	public void setStatus(String status) {
 		Status = status;
+	}
+	public String getUserType() {
+		return UserType;
+	}
+	public void setUserType(String userType) {
+		UserType = userType;
 	}
 }

@@ -1,11 +1,14 @@
 package Data;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.nit.instance.DatabaseConnection;
 
 import Models.Transaction;
+import Models.User;
 
 public class TransactionRepository implements ITransactionRepository {
 
@@ -22,11 +25,11 @@ public class TransactionRepository implements ITransactionRepository {
 		try {
 			if(transaction!=null) {
 				Statement smt =  con.createStatement();
-				String query = "insert into Transaction " + " (SenderId, ReceiverId, Remarks, Amount)"
+				String query = "insert into Transaction " + " (SenderId, ReceiverId, Remarks, Amount,TransactionType)"
 	                    + " values ('"+transaction.getSenderId()+"',"
 	                    		+ " '"+transaction.getReceiverId()+"',"
 	                    						+ "'"+transaction.getRemarks()+"',"
-	                    							+ " "+transaction.getAmount()+")";
+	                    							+ " "+transaction.getAmount()+",'"+transaction.getTransactionType()+"')";
 				
 				smt.execute(query);
 				return true;
@@ -52,6 +55,22 @@ public class TransactionRepository implements ITransactionRepository {
 			System.out.println("Couldn't Delete the Transaction for "+ex);
 		}
 		return false;
+	}
+	@Override
+	public ArrayList<Transaction> GetAllTransactions() {
+		ArrayList<Transaction> listOfTransaction = new ArrayList<Transaction>();
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "Select * from Transaction";
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				Transaction transaction = new Transaction(rs.getInt(1), rs.getInt(2), rs.getInt(3),rs.getTimestamp(4),rs.getString("Remarks"), rs.getDouble(6), rs.getString("TransactionType"));
+				listOfTransaction.add(transaction);
+			}
+		}catch(Exception e) {
+			System.out.println("Couldn't get List of Transactions for "+e);
+		}
+		return listOfTransaction;
 	}
 
 }

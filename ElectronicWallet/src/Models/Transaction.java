@@ -1,18 +1,21 @@
 package Models;
 
+import java.sql.Timestamp;
+
 public class Transaction {
 	private int Id;
 	private int SenderId;
 	private int ReceiverId;
-	private java.sql.Date Date;
+	private Timestamp Date;
 	private String Remarks;
 	private Double Amount;
+	private String TransactionType;
 	
 	public Transaction()
 	{
 		
 	}
-	public Transaction(int Id,int SenderId,int ReceiverId,String Remarks,Double Amount,java.sql.Date Date)
+	public Transaction(int Id,int SenderId,int ReceiverId,Timestamp Date,String Remarks,Double Amount,String TransactionType)
 	{
 		this.setId(Id);
 		this.setSenderId(SenderId);
@@ -20,6 +23,7 @@ public class Transaction {
 		this.setRemarks(Remarks);
 		this.setAmount(Amount);
 		this.setDate(Date);
+		this.setTransactionType(TransactionType);
 	}
 
 	public int getId() {
@@ -61,10 +65,16 @@ public class Transaction {
 	public void setAmount(Double amount) {
 		Amount = amount;
 	}
-	public java.sql.Date getDate() {
+	public Timestamp getDate() {
 		return Date;
 	}
-	public void setDate(java.sql.Date date) {
+	public void setDate(Timestamp date) {
 		Date = date;
+	}
+	public String getTransactionType() {
+		return TransactionType;
+	}
+	public void setTransactionType(String transactionType) {
+		TransactionType = transactionType;
 	}
 }

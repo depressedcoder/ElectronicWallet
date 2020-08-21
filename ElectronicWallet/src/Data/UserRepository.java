@@ -24,9 +24,9 @@ public class UserRepository implements IUserRepository{
 		try {
 			if(user!=null) {
 				Statement smt =  con.createStatement();
-				String query = "insert into User " + " (UserName, Password, Name, PhoneNumber, Address, Balance, Gender, Status)"
+				String query = "insert into User " + " (UserName, Password, Name, PhoneNumber, Address, Balance, Gender, Status,UserType)"
 	                    + " values ('"+user.getUserName()+"', '"+user.getPassword()+"', '"+user.getName()+"','"+user.getPhoneNumber()+"',"
-	                    		+ " '"+user.getAddress()+"', "+user.getBalance()+",'"+user.getGender()+"','"+user.getStatus()+"')";
+	                    		+ " '"+user.getAddress()+"', "+user.getBalance()+",'"+user.getGender()+"','"+user.getStatus()+"','"+user.getUserType()+"')";
 				
 				smt.execute(query);
 				return true;
@@ -93,7 +93,7 @@ public class UserRepository implements IUserRepository{
 					 userData.setGender(rs.getString("Gender"));
 					 userData.setBalance(rs.getDouble(7)); //in 7 number index the balance is located...
 					 userData.setStatus(rs.getString("Status"));
-					 
+					 userData.setUserType(rs.getString("UserType"));
 					 return userData;
 				 }
 			}
@@ -116,7 +116,7 @@ public class UserRepository implements IUserRepository{
 					 userData = new User(rs.getInt(1),rs.getString("UserName"),
 								rs.getString("Password"), rs.getString("Name"),
 								rs.getString("Address"), rs.getString("PhoneNumber"),
-								rs.getString("Gender"), rs.getDouble(7), rs.getString("Status"));
+								rs.getString("Gender"), rs.getDouble(7), rs.getString("Status"), rs.getString("UserType"));
 					 
 					 return userData;
 				 }
@@ -144,7 +144,7 @@ public class UserRepository implements IUserRepository{
 				 userData.setGender(rs.getString("Gender"));
 				 userData.setBalance(rs.getDouble(7)); //in 7 number index the balance is located...
 				 userData.setStatus(rs.getString("Status"));
-				 
+				 userData.setUserType(rs.getString("UserType"));
 				 return userData;
 			 }
 		}catch (Exception e) {
@@ -172,14 +172,14 @@ public class UserRepository implements IUserRepository{
 		ArrayList<User> listOfUser = new ArrayList<User>();
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "Select * from User";
+			String sql = "Select * from User where UserType = 'User'";
 			ResultSet rs = stmt.executeQuery(sql);
 			User user;
 			while(rs.next()) {
 				user = new User(rs.getInt(1),rs.getString("UserName"),
 						rs.getString("Password"), rs.getString("Name"),
 						rs.getString("Address"), rs.getString("PhoneNumber"),
-						rs.getString("Gender"), rs.getDouble(7), rs.getString("Status"));
+						rs.getString("Gender"), rs.getDouble(7), rs.getString("Status"), rs.getString("UserType"));
 				listOfUser.add(user);
 			}
 		}catch(Exception e) {
