@@ -268,10 +268,10 @@ public class EWalletMain {
 		txtLoginUserName.setToolTipText("UserName");
 		txtLoginUserName.setColumns(10);
 		txtLoginUserName.setBounds(556, 187, 130, 26);
-		pnlLogin.add(txtLoginUserName);
+		pnlLogin.add(txtLoginUserName); //login
 		
 		JLabel label = new JLabel("User Name:");
-		label.setForeground(Color.LIGHT_GRAY);
+		label.setForeground(Color.LIGHT_GRAY); 
 		label.setBounds(460, 192, 84, 16);
 		pnlLogin.add(label);
 		
