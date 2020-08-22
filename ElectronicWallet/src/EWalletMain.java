@@ -27,6 +27,8 @@ import java.awt.SystemColor;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -34,9 +36,11 @@ import org.nit.instance.DatabaseConnection;
 
 import Data.IUserRepository;
 import Data.TransactionRepository;
+import Data.UserBalanceRechargeRepository;
 import Data.UserRepository;
 import Models.Transaction;
 import Models.User;
+import Models.UserBalanceRecharge;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -73,6 +77,8 @@ public class EWalletMain {
 	private JTextField txtSearchReceiver;
 	private JTextField txtAmount;
 	private JTable table;
+	private JTextField txtAmountAdd;
+	private JTable tblRechargePending;
 	/**
 	 * Launch the application.
 	 */
@@ -225,6 +231,32 @@ public class EWalletMain {
 				 String[] cols = {"T Id" , "S Id" ,"Sender Name", "Sender Phonenumeber","R Id","Receiver Name","Receiver PhoneNumber",  "Date" , "Remarks", "Amount", "T Type"};
 	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
 	   			 AdminTransactionTable.setModel(model);
+			 }
+		}
+		catch(ArrayIndexOutOfBoundsException ex) {
+			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
+		}
+	}
+	private void ShowUserBalanceAddPendingRequestTableData(int userId) {
+		try {
+			UserBalanceRechargeRepository ubrRepo = new UserBalanceRechargeRepository();
+			ArrayList<UserBalanceRecharge> listOfUserBalanceRecharge = ubrRepo.GetAllUserBalanceRecharge(userId,"Pending");
+			
+			 if(listOfUserBalanceRecharge.size()>0) {
+				 String[][] data = new String[listOfUserBalanceRecharge.size()][3];//rows,column
+				 int rowindex = 0;
+				 for(int i=0;i<listOfUserBalanceRecharge.size();i++)
+				 {
+					 data[rowindex][0] = listOfUserBalanceRecharge.get(i).getRechargeDate()+"";
+					 data[rowindex][1] = listOfUserBalanceRecharge.get(i).getRechargeBalance()+"";
+					 
+					 data[rowindex][2] = listOfUserBalanceRecharge.get(i).getRechargeStatus()+"";
+					 
+					 rowindex++;
+				 }
+				 String[] cols = {"Request Date" , "Amount" ,"Request Status"};
+	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+	   			 tblRechargePending.setModel(model);
 			 }
 		}
 		catch(ArrayIndexOutOfBoundsException ex) {
@@ -548,6 +580,8 @@ public class EWalletMain {
 		JButton btnAdminLogout = new JButton("Log out");
 		btnAdminLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				txtLoginUserName.setText(null);
+				txtLoginPassword.setText(null);
 				switchPanel(pnlLogin);
 			}
 		});
@@ -749,6 +783,21 @@ public class EWalletMain {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.BLACK);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabbedPane.addChangeListener((ChangeListener) new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(tabbedPane.getSelectedIndex()==0) {
+					//this is send money area
+				}
+				else if(tabbedPane.getSelectedIndex() == 1) {
+					txtAmountAdd.setText("");
+					ShowUserBalanceAddPendingRequestTableData(UserId);
+				}
+				else if(tabbedPane.getSelectedIndex()==2) {
+					//this is Transaction history area
+				}
+			}
+	    });
 		tabbedPane.setBounds(32, 62, 718, 420);
 		pnlUserProfile.add(tabbedPane);
 		
@@ -806,13 +855,41 @@ public class EWalletMain {
 		pnlUserSendMoney.add(txtRemarks);
 		
 		JPanel pnlUserAddBalance = new JPanel();
+		pnlUserAddBalance.setBackground(Color.DARK_GRAY);
 		tabbedPane.addTab("Add Balance", null, pnlUserAddBalance, null);
 		pnlUserAddBalance.setLayout(null);
+		
+		JLabel lblNewLabel_9 = new JLabel("*Amount:");
+		lblNewLabel_9.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		lblNewLabel_9.setBounds(120, 29, 76, 16);
+		pnlUserAddBalance.add(lblNewLabel_9);
+		
+		txtAmountAdd = new JTextField();
+		txtAmountAdd.setBounds(222, 17, 247, 42);
+		pnlUserAddBalance.add(txtAmountAdd);
+		txtAmountAdd.setColumns(10);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(33, 105, 634, 243);
+		pnlUserAddBalance.add(scrollPane_3);
+		
+		tblRechargePending = new JTable();
+		JTableHeader header5 = tblRechargePending.getTableHeader();
+	      header5.setBackground(Color.black);
+	      header5.setForeground(Color.white);
+		scrollPane_3.setViewportView(tblRechargePending);
+		
+		JLabel lblPendingRequests = new JLabel("Pending Requests");
+		lblPendingRequests.setForeground(Color.LIGHT_GRAY);
+		lblPendingRequests.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		lblPendingRequests.setBounds(284, 79, 126, 19);
+		pnlUserAddBalance.add(lblPendingRequests);
 		
 		JPanel pnlTransectionHistory = new JPanel();
 		pnlTransectionHistory.setBackground(Color.DARK_GRAY);
 		tabbedPane.addTab("Transaction", null, pnlTransectionHistory, null);
 		pnlTransectionHistory.setLayout(null);
+		
 		
 		JLabel label_3 = new JLabel("Transaction History");
 		label_3.setForeground(Color.BLACK);
@@ -1055,6 +1132,45 @@ public class EWalletMain {
 		btnSendMoney.setBounds(336, 320, 117, 29);
 		pnlUserSendMoney.add(btnSendMoney);
 		
+		JButton btnAddUserBalance = new JButton("Add");
+		btnAddUserBalance.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(UserId!=0 && !txtAmountAdd.getText().equals("") && isAmountValid(txtAmountAdd.getText())) {
+					UserRepository userRepo = new UserRepository();
+					User user = new User();
+					double amountTobeAdd = Double.parseDouble(txtAmountAdd.getText());
+					user = userRepo.GetUserById(UserId);
+					if(user!=null)
+					{
+						UserBalanceRechargeRepository ubrRepo= new UserBalanceRechargeRepository();
+						UserBalanceRecharge ubr = new UserBalanceRecharge();
+						ubr.setUserId(user.getId());
+						ubr.setRechargeBalance(amountTobeAdd);
+						ubr.setRechargeStatus("Pending");
+						Boolean isInserted = ubrRepo.InsertUserBalanceRecharge(ubr);
+						if(isInserted)
+						{
+							txtAmountAdd.setText("");
+							ShowUserBalanceAddPendingRequestTableData(user.getId());
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Couldn't place the Request!!");
+						}
+					}
+				}
+				else {
+					if(txtAmountAdd.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Please enter amount!!");
+					}
+					else if(!isAmountValid(txtAmountAdd.getText())) {
+						JOptionPane.showMessageDialog(null, "Please enter VALID amount!!");
+					}
+				}
+			}
+		});
+		btnAddUserBalance.setBounds(499, 25, 117, 29);
+		pnlUserAddBalance.add(btnAddUserBalance);
+		
 		JButton btnUserRefresh = new JButton("R");
 		btnUserRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1066,6 +1182,7 @@ public class EWalletMain {
 					lblUserName.setText(user.getName());
 					lblBalance.setText(user.getBalance().toString());
 					ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
+					ShowUserBalanceAddPendingRequestTableData(user.getId());
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Couldn't Refresh properly!!");
