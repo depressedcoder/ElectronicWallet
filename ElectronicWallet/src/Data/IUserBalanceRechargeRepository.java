@@ -11,4 +11,6 @@ public interface IUserBalanceRechargeRepository {
 	UserBalanceRecharge GetUserBalanceRechargeById(int Id);
 	ArrayList<UserBalanceRecharge> GetAllUserBalanceRecharge();
 	ArrayList<UserBalanceRecharge> GetAllUserBalanceRecharge(int UserId,String RechargeStatus); // method overloading
+	
+	ArrayList<UserBalanceRecharge> GetAllUserBalanceRechargeByRechargeStatus(String RechargeStatus); 
 }

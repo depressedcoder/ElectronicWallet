@@ -72,5 +72,37 @@ public class TransactionRepository implements ITransactionRepository {
 		}
 		return listOfTransaction;
 	}
+	@Override
+	public ArrayList<Transaction> GetAllTransactionsBySenderId(int SenderId) {
+		ArrayList<Transaction> listOfTransaction = new ArrayList<Transaction>();
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "Select * from Transaction where SenderId="+SenderId+" order by Date desc";
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				Transaction transaction = new Transaction(rs.getInt(1), rs.getInt(2), rs.getInt(3),rs.getTimestamp(4),rs.getString("Remarks"), rs.getDouble(6), rs.getString("TransactionType"));
+				listOfTransaction.add(transaction);
+			}
+		}catch(Exception e) {
+			System.out.println("Couldn't get List of Transactions for "+e);
+		}
+		return listOfTransaction;
+	}
+	@Override
+	public ArrayList<Transaction> GetAllTransactionsByReceiverId(int ReceiverId) {
+		ArrayList<Transaction> listOfTransaction = new ArrayList<Transaction>();
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "Select * from Transaction where ReceiverId="+ReceiverId+" order by Date desc";
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				Transaction transaction = new Transaction(rs.getInt(1), rs.getInt(2), rs.getInt(3),rs.getTimestamp(4),rs.getString("Remarks"), rs.getDouble(6), rs.getString("TransactionType"));
+				listOfTransaction.add(transaction);
+			}
+		}catch(Exception e) {
+			System.out.println("Couldn't get List of Transactions for "+e);
+		}
+		return listOfTransaction;
+	}
 
 }

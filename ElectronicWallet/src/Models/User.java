@@ -1,7 +1,7 @@
 package Models;
 
 public class User {
-	private int Id;
+	private int UserId;
 	private String UserName;
 	private String Password;
 	private String Name;
@@ -15,10 +15,10 @@ public class User {
 	public User() {
 		
 	}
-	public User(int Id,String UserName,String Password,String Name,String Address,
+	public User(int UserId,String UserName,String Password,String Name,String Address,
 			String PhoneNumber, String Gender, Double Balance, String Status, String UserType)
 	{
-		this.setId(Id);
+		this.setUserId(UserId);
 		this.setUserName(UserName);
 		this.setPassword(Password);
 		this.setName(Name);
@@ -36,11 +36,11 @@ public class User {
 	public void setUserName(String userName) {
 		UserName = userName;
 	}
-	public int getId() {
-		return Id;
+	public int getUserId() {
+		return UserId;
 	}
-	public void setId(int id) {
-		Id = id;
+	public void setUserId(int id) {
+		UserId = id;
 	}
 	public String getPassword() {
 		return Password;

@@ -100,10 +100,19 @@ public class UserBalanceRechargeRepository implements IUserBalanceRechargeReposi
 		ArrayList<UserBalanceRecharge> listOfUserBalanceRecharge = new ArrayList<UserBalanceRecharge>();
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "Select * from UserBalanceRecharge";
+			String sql = "SELECT UserBalanceRecharge.Id as Id,"
+					+ "UserId,"
+					+ "RechargeAmount,"
+					+ "RechargeDate,"
+					+ "RechargeStatus,"
+					+ "user.Name as Name,"
+					+ "user.PhoneNumber as PhoneNumber"
+					+ " FROM UserBalanceRecharge\n" + 
+					"left join User as user on user.Id = UserBalanceRecharge.UserId";
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				UserBalanceRecharge userBalanceRecharge = new UserBalanceRecharge(rs.getInt(1), rs.getInt(2), rs.getDouble(3),rs.getTimestamp(4),rs.getString("RechargeStatus"));
+				UserBalanceRecharge userBalanceRecharge = new UserBalanceRecharge(rs.getInt(1), rs.getInt(2), rs.getDouble(3),rs.getTimestamp(4),rs.getString("RechargeStatus"),
+						rs.getString("Name"),rs.getString("PhoneNumber"));
 				listOfUserBalanceRecharge.add(userBalanceRecharge);
 			}
 		}catch(Exception e) {
@@ -117,10 +126,44 @@ public class UserBalanceRechargeRepository implements IUserBalanceRechargeReposi
 		ArrayList<UserBalanceRecharge> listOfUserBalanceRecharge = new ArrayList<UserBalanceRecharge>();
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "Select * from UserBalanceRecharge where RechargeStatus = '"+RechargeStatus+"' and UserId = "+UserId+" ORDER by RechargeDate DESC";
+			String sql = "Select UserBalanceRecharge.Id as Id,"
+					+ "UserId,"
+					+ "RechargeAmount,"
+					+ "RechargeDate,"
+					+ "RechargeStatus,"
+					+ "user.Name as Name,user.PhoneNumber as PhoneNumber"
+					+ " from UserBalanceRecharge left join User as user on user.Id = UserBalanceRecharge.UserId "
+					+ "where RechargeStatus = '"+RechargeStatus+"' and UserId = "+UserId+" ORDER by RechargeDate DESC";
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				UserBalanceRecharge userBalanceRecharge = new UserBalanceRecharge(rs.getInt(1), rs.getInt(2), rs.getDouble(3),rs.getTimestamp(4),rs.getString("RechargeStatus"));
+				UserBalanceRecharge userBalanceRecharge = new UserBalanceRecharge(rs.getInt(1), rs.getInt(2), rs.getDouble(3),rs.getTimestamp(4),rs.getString("RechargeStatus"),
+						rs.getString("Name"),rs.getString("PhoneNumber"));
+				listOfUserBalanceRecharge.add(userBalanceRecharge);
+			}
+		}catch(Exception e) {
+			System.out.println("Couldn't get List of UserBalanceRecharge for "+e);
+		}
+		return listOfUserBalanceRecharge;
+	}
+
+	@Override
+	public ArrayList<UserBalanceRecharge> GetAllUserBalanceRechargeByRechargeStatus(String RechargeStatus) {
+		ArrayList<UserBalanceRecharge> listOfUserBalanceRecharge = new ArrayList<UserBalanceRecharge>();
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "Select UserBalanceRecharge.Id as Id"
+					+ ",UserId,"
+					+ "RechargeAmount,"
+					+ "RechargeDate,"
+					+ "RechargeStatus,"
+					+ "user.Name as Name,"
+					+ "user.PhoneNumber as PhoneNumber"
+					+ " from UserBalanceRecharge left join User as user on user.Id = UserBalanceRecharge.UserId"
+					+ " where RechargeStatus = '"+RechargeStatus+"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				UserBalanceRecharge userBalanceRecharge = new UserBalanceRecharge(rs.getInt(1), rs.getInt(2), rs.getDouble(3),rs.getTimestamp(4),rs.getString("RechargeStatus"),
+						rs.getString("Name"),rs.getString("PhoneNumber"));
 				listOfUserBalanceRecharge.add(userBalanceRecharge);
 			}
 		}catch(Exception e) {

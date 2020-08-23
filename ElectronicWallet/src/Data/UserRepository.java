@@ -47,9 +47,9 @@ public class UserRepository implements IUserRepository{
 						+ "`Password`='"+user.getPassword()+"',`Name`='"+user.getName()+"',`Gender`='"+user.getGender()+"',"
 						+ "`PhoneNumber`='"+user.getPhoneNumber()+"',"
 								+ "`Address`='"+user.getAddress()+"' "
-										+ "WHERE Id = "+user.getId();
+										+ "WHERE Id = "+user.getUserId();
 				smt.execute(query);
-				return this.GetUserById(user.getId());
+				return this.GetUserById(user.getUserId());
 			}
 		}catch(Exception ex)
 		{
@@ -84,7 +84,7 @@ public class UserRepository implements IUserRepository{
 				User userData = new User();
 				 
 				if(rs.next()) {
-					userData.setId(rs.getInt(1));
+					userData.setUserId(rs.getInt(1));
 					 userData.setName(rs.getString("Name"));
 					 userData.setPassword(rs.getString("Password"));
 					 userData.setUserName(rs.getString("UserName"));
@@ -135,7 +135,7 @@ public class UserRepository implements IUserRepository{
 			User userData = new User();
 			 
 			if(rs.next()) {
-				userData.setId(rs.getInt(1));
+				userData.setUserId(rs.getInt(1));
 				 userData.setName(rs.getString("Name"));
 				 userData.setPassword(rs.getString("Password"));
 				 userData.setUserName(rs.getString("UserName"));

@@ -66,6 +66,7 @@ public class EWalletMain {
 	private JTable UserTable;
 	private JTable AdminTransactionTable;
 	private int AdminViewUserId;
+	private int AdminViewRechargeReqId;
 	private JTextField txtEName;
 	private JTextField txtEUserName;
 	private JPasswordField txtEPassword;
@@ -76,9 +77,12 @@ public class EWalletMain {
 	private String Gender;
 	private JTextField txtSearchReceiver;
 	private JTextField txtAmount;
-	private JTable table;
 	private JTextField txtAmountAdd;
 	private JTable tblRechargePending;
+	private JTable tblAdminViewRechargePendingReq;
+	private JTable tblAdminViewRechargeHistory;
+	private JTable tblIn;
+	private JTable tblOut;
 	/**
 	 * Launch the application.
 	 */
@@ -175,7 +179,7 @@ public class EWalletMain {
 				 int rowindex = 0;
 				 for(int i=0;i<listOfUser.size();i++)
 				 {
-					 data[rowindex][0] = listOfUser.get(i).getId()+"";
+					 data[rowindex][0] = listOfUser.get(i).getUserId()+"";
 					 data[rowindex][1] = listOfUser.get(i).getUserName();
 			  		 data[rowindex][2] = listOfUser.get(i).getPassword();
 					 data[rowindex][3] = listOfUser.get(i).getName();
@@ -258,6 +262,134 @@ public class EWalletMain {
 	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
 	   			 tblRechargePending.setModel(model);
 			 }
+		}
+		catch(ArrayIndexOutOfBoundsException ex) {
+			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
+		}
+	}
+	private void ShowAdminViewRechargePendingRequestTableData() {
+		try {
+			UserBalanceRechargeRepository ubrRepo = new UserBalanceRechargeRepository();
+			ArrayList<UserBalanceRecharge> listOfUserBalanceRecharge = ubrRepo.GetAllUserBalanceRechargeByRechargeStatus("Pending");
+			
+			 if(listOfUserBalanceRecharge.size()>0) {
+				 String[][] data = new String[listOfUserBalanceRecharge.size()][7];//rows,column
+				 int rowindex = 0;
+				 for(int i=0;i<listOfUserBalanceRecharge.size();i++)
+				 {
+					 data[rowindex][0] = listOfUserBalanceRecharge.get(i).getId()+"";
+					 data[rowindex][1] = listOfUserBalanceRecharge.get(i).getRechargeDate()+"";
+					 
+					 data[rowindex][2] = listOfUserBalanceRecharge.get(i).getUserId()+"";
+					 data[rowindex][3] = listOfUserBalanceRecharge.get(i).getName();
+					 data[rowindex][4] = listOfUserBalanceRecharge.get(i).getPhoneNumber();
+					 
+					 data[rowindex][5] = listOfUserBalanceRecharge.get(i).getRechargeBalance()+"";
+					 data[rowindex][6] = listOfUserBalanceRecharge.get(i).getRechargeStatus()+"";
+					 
+					 rowindex++;
+				 }
+				 String[] cols = {"Req ID","Request Date" ,"User Id","User Name","Phone Number", "Amount" ,"Request Status"};
+	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+	   			 tblAdminViewRechargePendingReq.setModel(model);
+			 }
+		}
+		catch(ArrayIndexOutOfBoundsException ex) {
+			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
+		}
+	}
+	private void ShowAdminViewRechargeSuccessInfoTableData() {
+		try {
+			UserBalanceRechargeRepository ubrRepo = new UserBalanceRechargeRepository();
+			ArrayList<UserBalanceRecharge> listOfUserBalanceRecharge = ubrRepo.GetAllUserBalanceRechargeByRechargeStatus("Success");
+			
+			 if(listOfUserBalanceRecharge.size()>0) {
+				 String[][] data = new String[listOfUserBalanceRecharge.size()][7];//rows,column
+				 int rowindex = 0;
+				 for(int i=0;i<listOfUserBalanceRecharge.size();i++)
+				 {
+					 
+					 data[rowindex][0] = listOfUserBalanceRecharge.get(i).getId()+"";
+					 data[rowindex][1] = listOfUserBalanceRecharge.get(i).getRechargeDate()+"";
+					 
+					 data[rowindex][2] = listOfUserBalanceRecharge.get(i).getUserId()+"";
+					 data[rowindex][3] = listOfUserBalanceRecharge.get(i).getName();
+					 data[rowindex][4] = listOfUserBalanceRecharge.get(i).getPhoneNumber();
+					 
+					 data[rowindex][5] = listOfUserBalanceRecharge.get(i).getRechargeBalance()+"";
+					 data[rowindex][6] = listOfUserBalanceRecharge.get(i).getRechargeStatus()+"";
+					 
+					 rowindex++;
+				 }
+				 String[] cols = {"Req ID","Request Date" ,"User Id","User Name","Phone Number", "Amount" ,"Request Status"};
+	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+	   			 tblAdminViewRechargeHistory.setModel(model);
+			 }
+		}
+		catch(ArrayIndexOutOfBoundsException ex) {
+			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
+		}
+	}
+	private void ShowUserTransactionHistory(int UserId) {
+		try {
+			if(UserId!=0)
+			{
+				
+				TransactionRepository transactionRepo = new TransactionRepository();
+				ArrayList<Transaction> listOfBalanceDepositHistory = transactionRepo.GetAllTransactionsByReceiverId(UserId);
+				ArrayList<Transaction> listOfBalanceWithdrawHistory = transactionRepo.GetAllTransactionsBySenderId(UserId);
+				
+				//Deposite history Table Area
+				 if(listOfBalanceDepositHistory.size()>0) { 
+					 String[][] data = new String[listOfBalanceDepositHistory.size()][6];//rows,column
+					 int rowindex = 0;
+					 for(int i=0;i<listOfBalanceDepositHistory.size();i++)
+					 {
+						 UserRepository userRepo = new UserRepository();
+						 User senderInfo = userRepo.GetUserById(listOfBalanceDepositHistory.get(i).getSenderId());
+						 
+						 data[rowindex][0] = senderInfo.getName();
+						 data[rowindex][1] = senderInfo.getPhoneNumber();
+						 
+						 data[rowindex][2] = listOfBalanceDepositHistory.get(i).getDate()+"";
+						 data[rowindex][3] = listOfBalanceDepositHistory.get(i).getRemarks();
+						 
+				  		 data[rowindex][4] = listOfBalanceDepositHistory.get(i).getAmount()+"";;
+				  		 
+				  		 data[rowindex][5] = listOfBalanceDepositHistory.get(i).getTransactionType();
+						
+						 rowindex++;
+					 }
+					 String[] cols = {"From" , "Sender Phonenumeber", "Date" , "Remarks", "Amount", "T Type"};
+		   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+		   			 tblIn.setModel(model);
+				 }
+				 //Withdraw history Table Area
+				 if(listOfBalanceWithdrawHistory.size()>0) { 
+					 String[][] data = new String[listOfBalanceWithdrawHistory.size()][6];//rows,column
+					 int rowindex = 0;
+					 for(int i=0;i<listOfBalanceWithdrawHistory.size();i++)
+					 {
+						 UserRepository userRepo = new UserRepository();
+						 User ReceiverInfo = userRepo.GetUserById(listOfBalanceWithdrawHistory.get(i).getReceiverId());
+						 
+						 data[rowindex][0] = ReceiverInfo.getName();
+						 data[rowindex][1] = ReceiverInfo.getPhoneNumber();
+						 
+						 data[rowindex][2] = listOfBalanceWithdrawHistory.get(i).getDate()+"";
+						 data[rowindex][3] = listOfBalanceWithdrawHistory.get(i).getRemarks();
+						 
+				  		 data[rowindex][4] = listOfBalanceWithdrawHistory.get(i).getAmount()+"";;
+				  		 
+				  		 data[rowindex][5] = listOfBalanceWithdrawHistory.get(i).getTransactionType();
+						
+						 rowindex++;
+					 }
+					 String[] cols = {"To" , "Receiver Phonenumeber", "Date" , "Remarks", "Amount", "T Type"};
+		   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+		   			 tblOut.setModel(model);
+				 }
+			}
 		}
 		catch(ArrayIndexOutOfBoundsException ex) {
 			JOptionPane.showMessageDialog(null, "Can not retrieve data!");
@@ -402,7 +534,7 @@ public class EWalletMain {
 		
 		JLabel lblNewLabel_2 = new JLabel("Admin Panel");
 		lblNewLabel_2.setForeground(Color.LIGHT_GRAY);
-		lblNewLabel_2.setBounds(298, 6, 149, 25);
+		lblNewLabel_2.setBounds(352, 6, 149, 25);
 		pnlAdmin.add(lblNewLabel_2);
 		
 		JPanel pnlUserProfile = new JPanel();
@@ -437,7 +569,7 @@ public class EWalletMain {
 		pnlUserProfile.add(lblBalance);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(29, 90, 737, 184);
+		scrollPane.setBounds(6, 90, 776, 184);
 		pnlAdmin.add(scrollPane);
 		
 		UserTable = new JTable();
@@ -456,11 +588,11 @@ public class EWalletMain {
 		
 		JLabel lblNewLabel_6 = new JLabel("User Information");
 		lblNewLabel_6.setForeground(Color.GRAY);
-		lblNewLabel_6.setBounds(29, 62, 149, 16);
+		lblNewLabel_6.setBounds(6, 62, 111, 16);
 		pnlAdmin.add(lblNewLabel_6);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(29, 328, 737, 184);
+		scrollPane_1.setBounds(6, 328, 776, 184);
 		pnlAdmin.add(scrollPane_1);
 		
 		AdminTransactionTable = new JTable();
@@ -469,10 +601,10 @@ public class EWalletMain {
 		adminTransactionTableHeader.setForeground(Color.white);
 		scrollPane_1.setViewportView(AdminTransactionTable);
 		
-		JLabel lblNewLabel_7 = new JLabel("Transections");
+		JLabel lblNewLabel_7 = new JLabel("Transactions");
 		lblNewLabel_7.setForeground(Color.GRAY);
 		lblNewLabel_7.setBackground(Color.BLACK);
-		lblNewLabel_7.setBounds(29, 300, 111, 16);
+		lblNewLabel_7.setBounds(6, 300, 88, 16);
 		pnlAdmin.add(lblNewLabel_7);
 		//Button Area
 		
@@ -580,12 +712,13 @@ public class EWalletMain {
 		JButton btnAdminLogout = new JButton("Log out");
 		btnAdminLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				UserId = 0;
 				txtLoginUserName.setText(null);
 				txtLoginPassword.setText(null);
 				switchPanel(pnlLogin);
 			}
 		});
-		btnAdminLogout.setBounds(169, 5, 117, 29);
+		btnAdminLogout.setBounds(6, 5, 92, 29);
 		pnlAdmin.add(btnAdminLogout);
 		
 		JButton btnBlockUser = new JButton("Block User");
@@ -654,14 +787,13 @@ public class EWalletMain {
 		btnDeleteUser.setBounds(645, 59, 117, 24);
 		pnlAdmin.add(btnDeleteUser);
 		
-		
 		JButton btnUserProfileLogout = new JButton("Log Out");
 		btnUserProfileLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanel(pnlLogin);
 			}
 		});
-		btnUserProfileLogout.setBounds(123, 1, 117, 29);
+		btnUserProfileLogout.setBounds(32, 1, 94, 29);
 		pnlUserProfile.add(btnUserProfileLogout);
 		//pnlUserEdit
 
@@ -794,7 +926,7 @@ public class EWalletMain {
 					ShowUserBalanceAddPendingRequestTableData(UserId);
 				}
 				else if(tabbedPane.getSelectedIndex()==2) {
-					//this is Transaction history area
+					ShowUserTransactionHistory(UserId);
 				}
 			}
 	    });
@@ -896,12 +1028,37 @@ public class EWalletMain {
 		label_3.setBounds(289, 6, 129, 16);
 		pnlTransectionHistory.add(label_3);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(28, 36, 626, 320);
-		pnlTransectionHistory.add(scrollPane_2);
+		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.BOTTOM);
+		tabbedPane_1.setBounds(6, 24, 685, 344);
+		pnlTransectionHistory.add(tabbedPane_1);
 		
-		table = new JTable();
-		scrollPane_2.setViewportView(table);
+		JPanel pnlIn = new JPanel();
+		tabbedPane_1.addTab("In", null, pnlIn, null);
+		pnlIn.setLayout(null);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(6, 6, 652, 286);
+		pnlIn.add(scrollPane_2);
+		
+		tblIn = new JTable();
+		JTableHeader header8 = tblIn.getTableHeader();
+	      header8.setBackground(Color.black);
+	      header8.setForeground(Color.white);
+		scrollPane_2.setViewportView(tblIn);
+		
+		JPanel pnlOut = new JPanel();
+		tabbedPane_1.addTab("Out", null, pnlOut, null);
+		pnlOut.setLayout(null);
+		
+		JScrollPane scrollPane_6 = new JScrollPane();
+		scrollPane_6.setBounds(6, 6, 652, 286);
+		pnlOut.add(scrollPane_6);
+		
+		tblOut = new JTable();
+		JTableHeader header6 = tblOut.getTableHeader();
+	      header6.setBackground(Color.black);
+	      header6.setForeground(Color.white);
+		scrollPane_6.setViewportView(tblOut);
 		
 		JButton btnlogin = new JButton("Login");
 		btnlogin.addActionListener(new ActionListener() {
@@ -913,7 +1070,7 @@ public class EWalletMain {
 						 if(userData!=null && userData.getUserType().equalsIgnoreCase("User")) {
 							 String UserStatus = userData.getStatus();
 							 if(UserStatus.equalsIgnoreCase("Active")) {
-								 UserId = userData.getId();
+								 UserId = userData.getUserId();
 								 lblUserName.setText(userData.getName());
 								 lblBalance.setText(userData.getBalance().toString());
 								 txtLoginUserName.setText(null);
@@ -927,6 +1084,8 @@ public class EWalletMain {
 							 }
 						 }
 						 else if(userData!=null && userData.getUserType().equalsIgnoreCase("Admin")) {
+							 //Admin Login
+							 UserId = userData.getUserId();
 							 SetUserTableData();
 							 SetAdminViewTransactionTableData();
 							 switchPanel(pnlAdmin);
@@ -969,14 +1128,14 @@ public class EWalletMain {
 						userData.setPassword(txtEPassword.getText());
 						userData.setPhoneNumber(txtEPhone.getText());
 						userData.setAddress(txtEAddress.getText());
-						userData.setId(UserId);
+						userData.setUserId(UserId);
 						userData.setGender(eGender);
 						userData.setUserType("User");
 						
 						User updatedUser = userRepo.UpdateUser(userData);
 						
 						if(updatedUser!=null) {
-							UserId = updatedUser.getId();
+							UserId = updatedUser.getUserId();
 							lblUserName.setText(updatedUser.getName());
 							lblBalance.setText(updatedUser.getBalance().toString());
 							JOptionPane.showMessageDialog(null, "User Info updated successfully!!");
@@ -1029,7 +1188,7 @@ public class EWalletMain {
 					receiverUser = userRepo.GetUserByPhoneNumber(txtSearchReceiver.getText());
 					if(receiverUser != null && receiverUser.getStatus().equals("Active") && receiverUser.getUserType().equalsIgnoreCase("User"))
 					{
-						ReceiverUserId = receiverUser.getId();
+						ReceiverUserId = receiverUser.getUserId();
 						lblReceiverName.setText(receiverUser.getName());
 						lblReceiverPhoneNumber.setText(receiverUser.getPhoneNumber());
 					}
@@ -1072,7 +1231,7 @@ public class EWalletMain {
 						if(senderCurrentBalance>amountTobeSend) 
 						{
 							Transaction transaction = new Transaction();
-							transaction.setSenderId(senderUser.getId());
+							transaction.setSenderId(senderUser.getUserId());
 							transaction.setReceiverId(ReceiverUserId);
 							transaction.setAmount(amountTobeSend);
 							transaction.setRemarks(txtRemarks.getText());
@@ -1084,8 +1243,8 @@ public class EWalletMain {
 								double senderBalanceAfterUpdate = senderCurrentBalance - amountTobeSend;
 								double recieverBalanceAfterUpdate = receiverUser.getBalance()+amountTobeSend;
 										
-								Boolean isSenderBalanceUpdate = userRepo.UpdateUserBalancebyId(senderUser.getId(), senderBalanceAfterUpdate);
-								Boolean isReceiverBalanceUpdated = userRepo.UpdateUserBalancebyId(receiverUser.getId(), recieverBalanceAfterUpdate);
+								Boolean isSenderBalanceUpdate = userRepo.UpdateUserBalancebyId(senderUser.getUserId(), senderBalanceAfterUpdate);
+								Boolean isReceiverBalanceUpdated = userRepo.UpdateUserBalancebyId(receiverUser.getUserId(), recieverBalanceAfterUpdate);
 								if(isSenderBalanceUpdate && isReceiverBalanceUpdated) 
 								{
 									ReceiverUserId = 0;
@@ -1093,8 +1252,7 @@ public class EWalletMain {
 									ClearSearchRecieverField(txtRemarks, lblReceiverName, lblReceiverPhoneNumber);
 									//updateSenderbalance meant lebel
 									lblBalance.setText(Double.toString(senderBalanceAfterUpdate));
-									//updateReceiverbalance meant lebel also need refresh button
-									//update transaction table
+									ShowUserTransactionHistory(UserId);
 								}
 							}
 							else 
@@ -1144,14 +1302,14 @@ public class EWalletMain {
 					{
 						UserBalanceRechargeRepository ubrRepo= new UserBalanceRechargeRepository();
 						UserBalanceRecharge ubr = new UserBalanceRecharge();
-						ubr.setUserId(user.getId());
+						ubr.setUserId(user.getUserId());
 						ubr.setRechargeBalance(amountTobeAdd);
 						ubr.setRechargeStatus("Pending");
 						Boolean isInserted = ubrRepo.InsertUserBalanceRecharge(ubr);
 						if(isInserted)
 						{
 							txtAmountAdd.setText("");
-							ShowUserBalanceAddPendingRequestTableData(user.getId());
+							ShowUserBalanceAddPendingRequestTableData(user.getUserId());
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Couldn't place the Request!!");
@@ -1171,7 +1329,7 @@ public class EWalletMain {
 		btnAddUserBalance.setBounds(499, 25, 117, 29);
 		pnlUserAddBalance.add(btnAddUserBalance);
 		
-		JButton btnUserRefresh = new JButton("R");
+		JButton btnUserRefresh = new JButton("Refresh");
 		btnUserRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserRepository userRepo = new UserRepository();
@@ -1182,14 +1340,202 @@ public class EWalletMain {
 					lblUserName.setText(user.getName());
 					lblBalance.setText(user.getBalance().toString());
 					ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
-					ShowUserBalanceAddPendingRequestTableData(user.getId());
+					ShowUserBalanceAddPendingRequestTableData(user.getUserId());
+					ShowUserTransactionHistory(user.getUserId());
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Couldn't Refresh properly!!");
 				}
 			}
 		});
-		btnUserRefresh.setBounds(32, 1, 40, 29);
+		btnUserRefresh.setBounds(127, 1, 80, 29);
 		pnlUserProfile.add(btnUserRefresh);
+		
+		JPanel pnlAdminViewUserPendingReq = new JPanel();
+		pnlAdminViewUserPendingReq.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		pnlAdminViewUserPendingReq.setBackground(Color.BLACK);
+		layeredPane.add(pnlAdminViewUserPendingReq, "name_10252460577849");
+		pnlAdminViewUserPendingReq.setLayout(null);
+		
+		JLabel lblNewLabel_10 = new JLabel("Recharge Pending Request:");
+		lblNewLabel_10.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		lblNewLabel_10.setForeground(Color.GRAY);
+		lblNewLabel_10.setBounds(295, 25, 193, 23);
+		pnlAdminViewUserPendingReq.add(lblNewLabel_10);
+		
+		JButton btnBacktoAdmin = new JButton("Back");
+		btnBacktoAdmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminViewRechargeReqId = 0;
+				SetAdminViewTransactionTableData();
+				switchPanel(pnlAdmin);
+			}
+		});
+		btnBacktoAdmin.setBounds(18, 5, 117, 29);
+		pnlAdminViewUserPendingReq.add(btnBacktoAdmin);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(18, 53, 752, 203);
+		pnlAdminViewUserPendingReq.add(scrollPane_4);
+		
+		tblAdminViewRechargePendingReq = new JTable();
+		tblAdminViewRechargePendingReq.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				AdminViewRechargeReqId = Integer.parseInt(tblAdminViewRechargePendingReq.getValueAt(tblAdminViewRechargePendingReq.getSelectedRow(), 0).toString());
+			}
+		});
+		JTableHeader header9 = tblAdminViewRechargePendingReq.getTableHeader();
+	      header9.setBackground(Color.black);
+	      header9.setForeground(Color.white);
+		scrollPane_4.setViewportView(tblAdminViewRechargePendingReq);
+		
+		JButton btnApproveRechargeReq = new JButton("Approve");
+		btnApproveRechargeReq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(AdminViewRechargeReqId!=0)
+				{
+					UserBalanceRechargeRepository ubrRepo = new UserBalanceRechargeRepository();
+					UserRepository userRepo = new UserRepository();
+					User user = new User();
+					UserBalanceRecharge ubr = new UserBalanceRecharge();
+					ubr = ubrRepo.GetUserBalanceRechargeById(AdminViewRechargeReqId);
+					if(ubr!=null)
+					{
+						user = userRepo.GetUserById(ubr.getUserId());
+						int AdminUserId = UserId;
+						if(user != null && AdminUserId !=0 && user.getStatus().equalsIgnoreCase("Active"))
+						{
+							Boolean isRechargeStatusUpdate = ubrRepo.UpdateRechargeStatusByIdandStatusType(ubr.getId(), "Success");
+							TransactionRepository transactionRepo = new TransactionRepository();
+							
+							Transaction transaction = new Transaction();
+							transaction.setSenderId(AdminUserId);
+							transaction.setReceiverId(user.getUserId());
+							transaction.setAmount(ubr.getRechargeBalance());
+							transaction.setRemarks("Balanced Recharged approved by Admin.");
+							transaction.setTransactionType("Recharge");
+							
+							Boolean isTransactioninserted = transactionRepo.InsertTransaction(transaction);
+							
+							double amount = ubr.getRechargeBalance() + user.getBalance();
+							if(isRechargeStatusUpdate && isTransactioninserted)
+							{
+								
+								Boolean isUserBalanceUpdate = userRepo.UpdateUserBalancebyId(user.getUserId(), amount);
+								
+								if(isUserBalanceUpdate)
+								{
+									ShowAdminViewRechargePendingRequestTableData();
+									ShowAdminViewRechargeSuccessInfoTableData();
+									AdminViewRechargeReqId = 0;
+								}
+								else {
+									JOptionPane.showMessageDialog(null, "Couldn't Update User Balance!!");
+								}
+							}
+							else {
+								if(!isRechargeStatusUpdate)
+									JOptionPane.showMessageDialog(null, "Couldn't approve the status!!");
+								else
+									JOptionPane.showMessageDialog(null, "Couldn't update the Transaction!!");
+							}
+						}
+						else {
+							if(user == null)
+							{
+								JOptionPane.showMessageDialog(null, "User don't found!!");
+							}
+							else if(!user.getStatus().equalsIgnoreCase("Active"))
+							{
+								JOptionPane.showMessageDialog(null, "This user is currently blocked!!");
+							}
+						}
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Recharge Request not found!!");
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No Request Selected!!");
+				}
+			}
+		});
+		btnApproveRechargeReq.setBounds(668, 24, 96, 29);
+		pnlAdminViewUserPendingReq.add(btnApproveRechargeReq);
+		
+		JLabel lblRechargeHistory = new JLabel("Recharge History");
+		lblRechargeHistory.setForeground(Color.GRAY);
+		lblRechargeHistory.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		lblRechargeHistory.setBounds(329, 270, 123, 23);
+		pnlAdminViewUserPendingReq.add(lblRechargeHistory);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setBounds(18, 298, 752, 203);
+		pnlAdminViewUserPendingReq.add(scrollPane_5);
+		
+		tblAdminViewRechargeHistory = new JTable();
+		JTableHeader header7 = tblAdminViewRechargeHistory.getTableHeader();
+	      header7.setBackground(Color.black);
+	      header7.setForeground(Color.white);
+		scrollPane_5.setViewportView(tblAdminViewRechargeHistory);
+		
+		JButton btnDaleteRechargeReq = new JButton("Dalete");
+		btnDaleteRechargeReq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(AdminViewRechargeReqId!=0)
+				{
+					UserBalanceRechargeRepository ubrRepo = new UserBalanceRechargeRepository();
+					Boolean isRequestDeleted = ubrRepo.DeleteUserBalanceRechargeById(AdminViewRechargeReqId);
+					if(isRequestDeleted)
+					{
+						AdminViewRechargeReqId= 0;
+						ShowAdminViewRechargePendingRequestTableData();
+						ShowAdminViewRechargeSuccessInfoTableData();
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Can't delete the Request!!");
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No Request Selected!!");
+				}
+			}
+		});
+		btnDaleteRechargeReq.setBounds(571, 24, 96, 29);
+		pnlAdminViewUserPendingReq.add(btnDaleteRechargeReq);
+		
+		JButton btnRefreshRequestArea = new JButton("Refresh");
+		btnRefreshRequestArea.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminViewRechargeReqId = 0;
+				ShowAdminViewRechargePendingRequestTableData();
+				ShowAdminViewRechargeSuccessInfoTableData();
+			}
+		});
+		btnRefreshRequestArea.setBounds(137, 5, 75, 29);
+		pnlAdminViewUserPendingReq.add(btnRefreshRequestArea);
+		
+		JButton btnPending = new JButton("Pendings");
+		btnPending.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ShowAdminViewRechargePendingRequestTableData();
+				ShowAdminViewRechargeSuccessInfoTableData();
+				switchPanel(pnlAdminViewUserPendingReq);
+			}
+		});
+		btnPending.setBounds(645, 5, 117, 29);
+		pnlAdmin.add(btnPending);
+		
+		JButton btnRefreshAdminViewUserAndTransactionTable = new JButton("Refresh");
+		btnRefreshAdminViewUserAndTransactionTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SetUserTableData();
+				SetAdminViewTransactionTableData();
+			}
+		});
+		btnRefreshAdminViewUserAndTransactionTable.setBounds(98, 5, 92, 29);
+		pnlAdmin.add(btnRefreshAdminViewUserAndTransactionTable);
 	}
 }
