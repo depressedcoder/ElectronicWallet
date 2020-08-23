@@ -12,13 +12,22 @@ import org.nit.instance.DatabaseConnection;
 import Models.User;
 
 public class UserRepository implements IUserRepository{
-
+	
+	//private static UserRepository instance;
 	private Connection con;
 	private DatabaseConnection dbc;
 	public UserRepository() {
 		dbc = DatabaseConnection.getDatabaseConnection();
 		con = dbc.getConnection();
 	}
+	/*public static UserRepository getInstance()
+	{
+		if(instance == null)
+		{
+			instance = new UserRepository();
+		}
+		return instance;
+	}*/
 	@Override
 	public Boolean InsertUser(User user) {
 		try {
@@ -155,7 +164,7 @@ public class UserRepository implements IUserRepository{
 	@Override
 	public Boolean UpdateUserBalancebyId(int Id,double Amount) {
 		try {
-			if(Id!=0 && Amount>0) {
+			if(Id!=0 && Amount>=0) {
 				Statement smt =  con.createStatement();
 				String query = "update User set Balance= "+Amount+" where Id = "+Id;
 				smt.execute(query);
