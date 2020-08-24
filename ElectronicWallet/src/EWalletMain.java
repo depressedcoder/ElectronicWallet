@@ -1400,7 +1400,6 @@ public class EWalletMain {
 						
 						if(user!=null && amountTobeAdd<=user.getBalance() && totalPendingCashoutAmountRequest<=user.getBalance())
 						{
-							
 							UserRequest ur = new UserRequest();
 							ur.setUserId(user.getUserId());
 							ur.setRequestBalance(amountTobeAdd);
