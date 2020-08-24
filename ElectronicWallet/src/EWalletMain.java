@@ -1389,7 +1389,7 @@ public class EWalletMain {
 						
 						double totalPendingCashoutAmountRequest = 0;
 						String pendingCashoutStringLine="";
-						for(int i=0;i<userRequest.size();i++)
+						for(int i=0;i<userRequest.size();i++) 
 						{
 							totalPendingCashoutAmountRequest+=userRequest.get(i).getRequestBalance();
 							pendingCashoutStringLine+=userRequest.get(i).getRequestBalance().toString()+",";
