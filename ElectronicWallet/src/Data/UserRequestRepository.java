@@ -177,11 +177,11 @@ public class UserRequestRepository implements IUserRequestRepository{
 	}
 
 	@Override
-	public ArrayList<UserRequest> GetAllUserRequestByUserIdandRequestType(int UserId, String RequestType) {
+	public ArrayList<UserRequest> GetAllUserRequestByUserIdandRequestType(int UserId, String RequestType, String RequestStatus) {
 		ArrayList<UserRequest> listOfUserRequest = new ArrayList<UserRequest>();
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "SELECT * FROM UserRequest where UserId = "+UserId+" and RequestType = '"+RequestType+"'";
+			String sql = "SELECT * FROM UserRequest where UserId = "+UserId+" and RequestType = '"+RequestType+"' and RequestStatus = '"+RequestStatus+"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
 				

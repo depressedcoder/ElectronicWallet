@@ -14,5 +14,5 @@ public interface IUserRequestRepository {
 	
 	ArrayList<UserRequest> GetAllUserRequestByRequestStatus(String RequestStatus); 
 	
-	ArrayList<UserRequest> GetAllUserRequestByUserIdandRequestType(int UserId,String RequestType); 
+	ArrayList<UserRequest> GetAllUserRequestByUserIdandRequestType(int UserId,String RequestType,String RequestStatus); 
 }

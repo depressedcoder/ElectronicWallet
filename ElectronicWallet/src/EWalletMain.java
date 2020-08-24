@@ -1236,7 +1236,7 @@ public class EWalletMain {
 							
 							//for checking if pending request and the amount need to send is big or not
 							UserRequestRepository urRepo= new UserRequestRepository();
-							ArrayList<UserRequest> userRequest = urRepo.GetAllUserRequestByUserIdandRequestType(UserId,"CashOut");
+							ArrayList<UserRequest> userRequest = urRepo.GetAllUserRequestByUserIdandRequestType(UserId,"CashOut","Pending");
 							
 							double totalPendingCashoutAmountRequest = 0;
 							String pendingCashoutStringLine="";
@@ -1385,7 +1385,7 @@ public class EWalletMain {
 						
 						//for checking if pending request and the amount need to cash out is big or not
 						UserRequestRepository urRepo= new UserRequestRepository();
-						ArrayList<UserRequest> userRequest = urRepo.GetAllUserRequestByUserIdandRequestType(UserId,"CashOut");
+						ArrayList<UserRequest> userRequest = urRepo.GetAllUserRequestByUserIdandRequestType(UserId,"CashOut","Pending");
 						
 						double totalPendingCashoutAmountRequest = 0;
 						String pendingCashoutStringLine="";
