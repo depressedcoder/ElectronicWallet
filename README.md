@@ -2,7 +2,7 @@
 This is a desktop app where users can transfer money between users, recharge balance to their account, and cash out from their account. This is a simple project based on a complete oop
 structure. It is implemented using java and swing UI and MySQL is used for the database. 
 
-User Login Registration:
+User Login/Registration:
 
 When the project runs it shows users to log in or register their profile. First, a user should register their profile by clinking register. It will open the registration panel. There are some mandatory fields to fill up like UserName, Name, Password, PhoneNumber. If the required field is not filled it shows alert through message dialog to the user. For registration, the Phonenumber must be consist of 11 digits no letter is allowed, and also the Phone number should be unique, if the PhoneNumber is used by another user it will not let the user to register hence shows an alert for giving a unique phone number. After filling up the registration form the user is registered but currently 'Blocked' for admin review. When the admin reviews and approved the user, it sets the user status to 'Active' and gives bonus money of 100.0, and only then the user can log in.
 
