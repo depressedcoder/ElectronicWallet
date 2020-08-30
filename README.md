@@ -21,6 +21,7 @@ Admin Panel:
 There are two types of User 'Admin' & 'User'. In the login section if the user type is 'Admin' it will open the admin panel. In the admin panel, Admin can see all the user lists, Transaction history, and Recharge and Cashout pending requests. Admin can Block, Activate or Delate a user also approved or delete pending Recharge or cashout request. There is no Admin creation panel, admin can be added directly from the database with a UserType equal 'Admin'.
 
 OOP Design: 
+
 There are three class named User, Transaction, and UserRequest in the model folder. Every model class has some attributes and some setter and getter methods for the attributes by that we achieved the encapsulation in oop. User class is inherited by the UserRequest and override some methods like user name, phone number. There are three interfaces named IUserRepository, ITransaction, IUserRequest, and their class named UserRepository, TransactionRepository, and UserRequestRepository in the Data folder. There are some methods declared in the interface which is implemented in these three repository classes. In this interface, there are some methods with the same name but different parameters that are implemented in the repository class by overriding. By that, we achieved polymorphism. The user who wants to use the methods of those interfaces only knows the classes that implement those interfaces and their methods, information about the implementation is completely hidden from the user, thus achieving 100% abstraction.
 
 
