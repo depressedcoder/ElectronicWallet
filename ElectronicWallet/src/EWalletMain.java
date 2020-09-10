@@ -1117,7 +1117,7 @@ public class EWalletMain {
 							 UserId = userData.getUserId();
 							 SetUserTableData();
 							 SetAdminViewTransactionTableData();
-							 switchPanel(pnlAdmin);
+							 switchPanel(pnlAdmin); 
 						 }
 						 else {
 							 JOptionPane.showMessageDialog(null, "User Name or Password Incorrect");
