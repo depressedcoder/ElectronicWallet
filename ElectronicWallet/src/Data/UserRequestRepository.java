@@ -201,4 +201,20 @@ public class UserRequestRepository implements IUserRequestRepository{
 		return listOfUserRequest;
 	}
 
+	@Override
+	public Boolean DeleteUserRequestByUserId(int UserId) {
+		try {
+			if(UserId!=0) {
+				Statement smt =  con.createStatement();
+				String query = "DELETE FROM `UserRequest` WHERE UserId="+UserId;
+				smt.execute(query);
+				return true;
+			}
+		}catch(Exception ex)
+		{
+			System.out.println("Couldn't Delete the UserRequest for "+ex);
+		}
+		return false;
+	}
+
 }

@@ -104,5 +104,20 @@ public class TransactionRepository implements ITransactionRepository {
 		}
 		return listOfTransaction;
 	}
+	@Override
+	public Boolean DeleteTransactionByUserId(int UserId) {
+		try {
+			if(UserId!=0) {
+				Statement smt =  con.createStatement();
+				String query = "DELETE FROM `Transaction` WHERE ReceiverId="+UserId+" or SenderId="+UserId;
+				smt.execute(query);
+				return true;
+			}
+		}catch(Exception ex)
+		{
+			System.out.println("Couldn't Delete the Transaction for "+ex);
+		}
+		return false;
+	}
 
 }

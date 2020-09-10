@@ -243,6 +243,9 @@ public class EWalletMain {
 	}
 	private void ShowUserBalanceAddPendingRequestTableData(int userId) {
 		try {
+			DefaultTableModel model = (DefaultTableModel) tblRequestPending.getModel();
+			model.setRowCount(0);
+			
 			UserRequestRepository urRepo = new UserRequestRepository();
 			ArrayList<UserRequest> listOfUserRequest = urRepo.GetAllUserRequest(userId,"Pending");
 			
@@ -260,7 +263,7 @@ public class EWalletMain {
 					 rowindex++;
 				 }
 				 String[] cols = {"Request Date" , "Amount" ,"Request Status", "Request Type"};
-	   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+	   			 model = new DefaultTableModel(data,cols);
 	   			 tblRequestPending.setModel(model);
 			 }
 		}
@@ -335,6 +338,10 @@ public class EWalletMain {
 	}
 	private void ShowUserTransactionHistory(int UserId) {
 		try {
+			DefaultTableModel model = (DefaultTableModel) tblIn.getModel();
+			model.setRowCount(0);
+			model = (DefaultTableModel) tblOut.getModel();
+			model.setRowCount(0);
 			if(UserId!=0)
 			{
 				
@@ -364,7 +371,7 @@ public class EWalletMain {
 						 rowindex++;
 					 }
 					 String[] cols = {"From" , "Sender Phonenumeber", "Date" , "Remarks", "Amount", "T Type"};
-		   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+		   			 model = new DefaultTableModel(data,cols);
 		   			 tblIn.setModel(model);
 				 }
 				 //Withdraw history Table Area
@@ -389,7 +396,7 @@ public class EWalletMain {
 						 rowindex++;
 					 }
 					 String[] cols = {"To" , "Receiver Phonenumeber", "Date" , "Remarks", "Amount", "T Type"};
-		   			 DefaultTableModel model = new DefaultTableModel(data,cols);
+		   			 model = new DefaultTableModel(data,cols);
 		   			 tblOut.setModel(model);
 				 }
 			}
@@ -777,8 +784,13 @@ public class EWalletMain {
 				if(AdminViewUserId != 0) {
 					try {
 						UserRepository userRepo = new UserRepository();
+						TransactionRepository tranRepo = new TransactionRepository();
+						UserRequestRepository reqRepo = new UserRequestRepository();
+						
+						Boolean isTransactionHistoryDeleted = tranRepo.DeleteTransactionByUserId(AdminViewUserId);
+						Boolean isUserRequestDeleted = reqRepo.DeleteUserRequestByUserId(AdminViewUserId);
 						Boolean isUserDeleted = userRepo.DeleteUserbyId(AdminViewUserId);
-						if(isUserDeleted)
+						if(isUserDeleted && isTransactionHistoryDeleted && isUserRequestDeleted)
 						{
 							JOptionPane.showMessageDialog(null, "User Deleted!!");
 							SetUserTableData();
@@ -801,6 +813,7 @@ public class EWalletMain {
 		btnUserProfileLogout.setForeground(Color.LIGHT_GRAY);
 		btnUserProfileLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				UserId=0;
 				switchPanel(pnlLogin);
 			}
 		});
@@ -1091,6 +1104,7 @@ public class EWalletMain {
 								 txtLoginUserName.setText(null);
 								 txtLoginPassword.setText(null);
 								 ClearSearchRecieverField(txtRemarks,lblReceiverName,lblReceiverPhoneNumber);
+								 tabbedPane.setSelectedIndex(0);
 								 switchPanel(pnlUserProfile);
 							 }
 							 else {

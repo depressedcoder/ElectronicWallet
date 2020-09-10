@@ -10,4 +10,5 @@ public interface ITransactionRepository {
 	ArrayList<Transaction> GetAllTransactionsBySenderId(int SenderId);
 	ArrayList<Transaction> GetAllTransactionsByReceiverId(int ReceiverId);
 	Boolean DeleteTransactionById(int Id);
+	Boolean DeleteTransactionByUserId(int UserId);
 }
