@@ -625,6 +625,7 @@ public class EWalletMain {
 		
 		pnlRegistration.add(cmbGender);
 		JButton btnGotoRegister = new JButton("Register");
+		btnGotoRegister.setForeground(Color.LIGHT_GRAY);
 		btnGotoRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ClearRegistrationField(txtAddress,cmbGender);
@@ -636,6 +637,7 @@ public class EWalletMain {
 		
 
 		JButton btnWalletRegister = new JButton("Register");
+		btnWalletRegister.setForeground(Color.LIGHT_GRAY);
 		btnWalletRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        try {
@@ -702,6 +704,7 @@ public class EWalletMain {
 		
 		
 		JButton btnBackToLogin = new JButton("Back To Login");
+		btnBackToLogin.setForeground(Color.LIGHT_GRAY);
 		btnBackToLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtLoginUserName.setText(null);
@@ -713,6 +716,7 @@ public class EWalletMain {
 		pnlRegistration.add(btnBackToLogin);
 		
 		JButton btnAdminLogout = new JButton("Log out");
+		btnAdminLogout.setForeground(Color.LIGHT_GRAY);
 		btnAdminLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserId = 0;
@@ -725,6 +729,7 @@ public class EWalletMain {
 		pnlAdmin.add(btnAdminLogout);
 		
 		JButton btnBlockUser = new JButton("Block User");
+		btnBlockUser.setForeground(Color.LIGHT_GRAY);
 		btnBlockUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(AdminViewUserId != 0) {
@@ -745,6 +750,7 @@ public class EWalletMain {
 		pnlAdmin.add(btnBlockUser);
 		
 		JButton btnActiveUser = new JButton("Active User");
+		btnActiveUser.setForeground(Color.LIGHT_GRAY);
 		btnActiveUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(AdminViewUserId != 0) {
@@ -765,6 +771,7 @@ public class EWalletMain {
 		pnlAdmin.add(btnActiveUser);
 		
 		JButton btnDeleteUser = new JButton("Delete User");
+		btnDeleteUser.setForeground(Color.LIGHT_GRAY);
 		btnDeleteUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(AdminViewUserId != 0) {
@@ -791,6 +798,7 @@ public class EWalletMain {
 		pnlAdmin.add(btnDeleteUser);
 		
 		JButton btnUserProfileLogout = new JButton("Log Out");
+		btnUserProfileLogout.setForeground(Color.LIGHT_GRAY);
 		btnUserProfileLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanel(pnlLogin);
@@ -887,6 +895,7 @@ public class EWalletMain {
 		pnlUserEditProfile.add(cmbEGender);
 		
 		JButton btnEditProfile = new JButton("Edit Profile");
+		btnEditProfile.setForeground(Color.LIGHT_GRAY);
 		btnEditProfile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ClearEditProfileField(txtEAddress);
@@ -916,6 +925,7 @@ public class EWalletMain {
 		pnlUserProfile.add(btnEditProfile);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setForeground(Color.LIGHT_GRAY);
 		tabbedPane.setBackground(Color.BLACK);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.addChangeListener((ChangeListener) new ChangeListener() {
@@ -1032,6 +1042,7 @@ public class EWalletMain {
 		pnlTransectionHistory.add(label_3);
 		
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.BOTTOM);
+		tabbedPane_1.setForeground(Color.LIGHT_GRAY);
 		tabbedPane_1.setBounds(6, 24, 685, 344);
 		pnlTransectionHistory.add(tabbedPane_1);
 		
@@ -1064,6 +1075,7 @@ public class EWalletMain {
 		scrollPane_6.setViewportView(tblOut);
 		
 		JButton btnlogin = new JButton("Login");
+		btnlogin.setForeground(Color.LIGHT_GRAY);
 		btnlogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -1116,6 +1128,7 @@ public class EWalletMain {
 		
 
 		JButton btnUpdateUser = new JButton("Update");
+		btnUpdateUser.setForeground(Color.LIGHT_GRAY);
 		btnUpdateUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(UserId != 0) {
@@ -1173,6 +1186,7 @@ public class EWalletMain {
 		pnlUserEditProfile.add(btnUpdateUser);
 		
 		JButton btnBackToUserProfile = new JButton("Back");
+		btnBackToUserProfile.setForeground(Color.LIGHT_GRAY);
 		btnBackToUserProfile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanel(pnlUserProfile);
@@ -1182,6 +1196,7 @@ public class EWalletMain {
 		pnlUserEditProfile.add(btnBackToUserProfile);
 		
 		JButton btnSearchRecieverUser = new JButton("Search");
+		btnSearchRecieverUser.setForeground(Color.LIGHT_GRAY);
 		btnSearchRecieverUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!txtSearchReceiver.getText().equals("") && txtSearchReceiver.getText().length() == 11)
@@ -1214,6 +1229,7 @@ public class EWalletMain {
 		pnlUserSendMoney.add(btnSearchRecieverUser);
 		
 		JButton btnSendMoney = new JButton("Send Money");
+		btnSendMoney.setForeground(Color.LIGHT_GRAY);
 		btnSendMoney.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -1334,6 +1350,7 @@ public class EWalletMain {
 		pnlUserSendMoney.add(btnSendMoney);
 		
 		JButton btnAddUserBalance = new JButton("Recharge");
+		btnAddUserBalance.setForeground(Color.LIGHT_GRAY);
 		btnAddUserBalance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(UserId!=0 && !txtAmountAdd.getText().equals("") && isAmountValid(txtAmountAdd.getText())) {
@@ -1374,6 +1391,7 @@ public class EWalletMain {
 		pnlUserAddBalance.add(btnAddUserBalance);
 		
 		JButton btnCashout = new JButton("Cash Out");
+		btnCashout.setForeground(Color.LIGHT_GRAY);
 		btnCashout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -1445,6 +1463,7 @@ public class EWalletMain {
 		pnlUserAddBalance.add(btnCashout);
 		
 		JButton btnUserRefresh = new JButton("Refresh");
+		btnUserRefresh.setForeground(Color.LIGHT_GRAY);
 		btnUserRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserRepository userRepo = new UserRepository();
@@ -1479,6 +1498,7 @@ public class EWalletMain {
 		pnlAdminViewUserPendingReq.add(lblNewLabel_10);
 		
 		JButton btnBacktoAdmin = new JButton("Back");
+		btnBacktoAdmin.setForeground(Color.LIGHT_GRAY);
 		btnBacktoAdmin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminViewUserRequestId = 0;
@@ -1506,6 +1526,7 @@ public class EWalletMain {
 		scrollPane_4.setViewportView(tblAdminViewRequestPendingReq);
 		
 		JButton btnApproveRechargeReq = new JButton("Approve");
+		btnApproveRechargeReq.setForeground(Color.LIGHT_GRAY);
 		btnApproveRechargeReq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(AdminViewUserRequestId!=0)
@@ -1636,7 +1657,8 @@ public class EWalletMain {
 	      header7.setForeground(Color.white);
 		scrollPane_5.setViewportView(tblAdminViewRequestHistory);
 		
-		JButton btnDaleteRechargeReq = new JButton("Dalete");
+		JButton btnDaleteRechargeReq = new JButton("Delete");
+		btnDaleteRechargeReq.setForeground(Color.LIGHT_GRAY);
 		btnDaleteRechargeReq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(AdminViewUserRequestId!=0)
@@ -1662,6 +1684,7 @@ public class EWalletMain {
 		pnlAdminViewUserPendingReq.add(btnDaleteRechargeReq);
 		
 		JButton btnRefreshRequestArea = new JButton("Refresh");
+		btnRefreshRequestArea.setForeground(Color.LIGHT_GRAY);
 		btnRefreshRequestArea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminViewUserRequestId = 0;
@@ -1673,6 +1696,7 @@ public class EWalletMain {
 		pnlAdminViewUserPendingReq.add(btnRefreshRequestArea);
 		
 		JButton btnPending = new JButton("Pendings");
+		btnPending.setForeground(Color.LIGHT_GRAY);
 		btnPending.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ShowAdminViewRechargePendingRequestTableData();
@@ -1684,6 +1708,7 @@ public class EWalletMain {
 		pnlAdmin.add(btnPending);
 		
 		JButton btnRefreshAdminViewUserAndTransactionTable = new JButton("Refresh");
+		btnRefreshAdminViewUserAndTransactionTable.setForeground(Color.LIGHT_GRAY);
 		btnRefreshAdminViewUserAndTransactionTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SetUserTableData();
