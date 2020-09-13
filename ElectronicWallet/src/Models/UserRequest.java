@@ -8,8 +8,6 @@ public class UserRequest extends User{
 	private Double RequestBalance;
 	private Timestamp RequestDate;
 	private String RequestStatus;
-	private String Name;
-	private String PhoneNumber;
 	private String RequestType;
 	
 	public UserRequest() {
@@ -22,8 +20,10 @@ public class UserRequest extends User{
 		this.setRequestBalance(RequestBalance);
 		this.setRequestDate(RequestDate);
 		this.setRequestStatus(RequestStatus);
-		this.Name = Name;
-		this.PhoneNumber = PhoneNumber;
+		
+		super.setName(Name); //The super keyword refers to superclass (parent) objects. It is used to call superclass methods, and to access the superclass constructor. 
+		super.setPhoneNumber(PhoneNumber);
+		
 		this.setRequestType(RequestType);
 	}
 	public int getId() {
@@ -55,18 +55,6 @@ public class UserRequest extends User{
 	}
 	public void setRequestStatus(String requestStatus) {
 		RequestStatus = requestStatus;
-	}
-	public String getName() { //user class method override
-		return Name; 
-	}
-	public void setName(String name) { //user class method override
-		Name = name;
-	}
-	public String getPhoneNumber() { //user class method override
-		return PhoneNumber;
-	}
-	public void setPhoneNumber(String phoneNumber) { //user class method override
-		PhoneNumber = phoneNumber;
 	}
 	public String getRequestType() {
 		return RequestType;

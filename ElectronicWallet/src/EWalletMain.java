@@ -1505,10 +1505,10 @@ public class EWalletMain {
 		layeredPane.add(pnlAdminViewUserPendingReq, "name_10252460577849");
 		pnlAdminViewUserPendingReq.setLayout(null);
 		
-		JLabel lblNewLabel_10 = new JLabel("Recharge Pending Request:");
+		JLabel lblNewLabel_10 = new JLabel("Recharge/CashOut Pending Request");
 		lblNewLabel_10.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		lblNewLabel_10.setForeground(Color.GRAY);
-		lblNewLabel_10.setBounds(295, 25, 193, 23);
+		lblNewLabel_10.setBounds(270, 25, 253, 23);
 		pnlAdminViewUserPendingReq.add(lblNewLabel_10);
 		
 		JButton btnBacktoAdmin = new JButton("Back");
@@ -1655,10 +1655,10 @@ public class EWalletMain {
 		btnApproveRechargeReq.setBounds(668, 24, 96, 29);
 		pnlAdminViewUserPendingReq.add(btnApproveRechargeReq);
 		
-		JLabel lblRechargeHistory = new JLabel("Recharge History");
+		JLabel lblRechargeHistory = new JLabel("Recharge/CashOut History");
 		lblRechargeHistory.setForeground(Color.GRAY);
 		lblRechargeHistory.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		lblRechargeHistory.setBounds(329, 270, 123, 23);
+		lblRechargeHistory.setBounds(329, 270, 194, 23);
 		pnlAdminViewUserPendingReq.add(lblRechargeHistory);
 		
 		JScrollPane scrollPane_5 = new JScrollPane();
